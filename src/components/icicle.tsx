@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useDriveData } from './drivedata.tsx';
+import { Folder } from '../drive/defs.ts';
 
 interface IcicleData {
     name: string;
@@ -8,8 +9,31 @@ interface IcicleData {
     children?: IcicleData[];
 }
 
+const toIcicleData = (root: Folder): IcicleData => {
+    return {
+        name: root.name,
+        children: [
+            { name: "Child 1", value: 100 },
+            {
+                name: "Child 2",
+                children: [
+                    { name: "Subchild 1", value: 50 },
+                    { name: "Subchild 2", value: 150 },
+                    {
+                        name: "Subchild 3",
+                        children: [
+                            { name: "Subchild 3a", value: 30 },
+                            { name: "Subchild 3b", value: 80 },
+                        ],
+                    },
+                ],
+            },
+        ],
+    }
+}
+
 const ZoomableIcicle: React.FC = () => {
-    const data = useDriveData();
+    const data = toIcicleData(useDriveData());
     const svgRef = useRef<SVGSVGElement | null>(null);
 
     useEffect(() => {

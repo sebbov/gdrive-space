@@ -1,28 +1,18 @@
 import React, { createContext, useContext, useState } from 'react';
+import { Folder } from '../drive/defs.ts';
 
-const DriveDataContext = createContext<any>(null);
+const initialRoot = {
+    name: "root",
+    subfolders: [],
+    size: 0,
+    filesSize: 0,
+    filesCount: 0,
+}
+
+const DriveDataContext = createContext<Folder>(initialRoot);
 
 export const DriveDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [data, setData] = useState({
-        name: "root",
-        children: [
-            { name: "Child 1", value: 100 },
-            {
-                name: "Child 2",
-                children: [
-                    { name: "Subchild 1", value: 50 },
-                    { name: "Subchild 2", value: 150 },
-                    {
-                        name: "Subchild 3",
-                        children: [
-                            { name: "Subchild 3a", value: 30 },
-                            { name: "Subchild 3b", value: 80 },
-                        ],
-                    },
-                ],
-            },
-        ],
-    });
+    const [data, setData] = useState(initialRoot);
 
     void setData; // TEMP
 
