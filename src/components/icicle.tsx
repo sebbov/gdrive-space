@@ -95,6 +95,13 @@ const ZoomableIcicle: React.FC = () => {
             .style('fill', (d) => (d === rootRectangular ? rootTextColor : '#000'))
             .style('display', (d) => (d.x1 - d.x0 > 40 ? null : 'none'));
 
+        const humanReadableSize = (value: number) => {
+            if (value === 0) return "0 Bytes";
+            const units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"];
+            const i = Math.floor(Math.log(value) / Math.log(1024));
+            const readableValue = (value / Math.pow(1024, i)).toFixed(2);
+            return `${readableValue} ${units[i]}`;
+        }
         const valueText = svg
             .selectAll<SVGTextElement, d3.HierarchyRectangularNode<IcicleData>>('.value')
             .data(rootRectangular.descendants())
@@ -103,7 +110,7 @@ const ZoomableIcicle: React.FC = () => {
             .attr('x', (d) => d.x0 + 4)
             .attr('y', (d) => (d.y1 + d.y0) / 2 + 12)
             .attr('dy', '0.35em')
-            .text((d) => (d.value ? `(${d.value})` : ''))
+            .text((d) => (d.value ? `(${humanReadableSize(d.value)})` : ''))
             .style('display', (d) => (d.x1 - d.x0 > 40 ? null : 'none'));
 
         const zoom = (d: d3.HierarchyRectangularNode<IcicleData>) => {

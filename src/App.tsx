@@ -3,19 +3,41 @@ import { useSetDriveData } from './components/drivedata.tsx';
 import ZoomableIcicle from './components/icicle.tsx';
 import { walkDrive } from './drive/ops.ts';
 import { Folder } from './drive/defs.ts';
+import { gapi } from 'gapi-script';
+
+
+const CLIENT_ID = '161482153716-nc2jdhntjl4aor8f9slfb40tu7gnnmvb.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+
 
 function App() {
   const setData = useSetDriveData();
-
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
+  // const [isSignedIn, setIsSignedIn] = useState(false);
 
   const handleStart = async () => {
     setIsStartButtonDisabled(true);
-    await walkDrive((folder: Folder) => {
-      setData(folder);
-    });
-    setIsStartButtonDisabled(false);
+
+    const initClient = async () => {
+      await gapi.client.init({
+        clientId: CLIENT_ID,
+        scope: SCOPES,
+        discoveryDocs: [DISCOVERY_DOC],
+      });
+
+      const authInstance = gapi.auth2.getAuthInstance();
+      if (!authInstance.isSignedIn.get()) {
+        await authInstance.signIn();
+      }
+
+      await walkDrive((folder: Folder) => setData(folder));
+
+      setIsStartButtonDisabled(false);
+    }
+    gapi.load('client:auth2', initClient);
   };
+
 
   return (
     <>
