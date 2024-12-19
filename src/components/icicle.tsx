@@ -9,31 +9,17 @@ interface IcicleData {
     children?: IcicleData[];
 }
 
-const toIcicleData = (root: Folder): IcicleData => {
+const toIcicleData = (folder: Folder): IcicleData => {
     return {
-        name: root.name,
-        children: [
-            { name: "Child 1", value: 100 },
-            {
-                name: "Child 2",
-                children: [
-                    { name: "Subchild 1", value: 50 },
-                    { name: "Subchild 2", value: 150 },
-                    {
-                        name: "Subchild 3",
-                        children: [
-                            { name: "Subchild 3a", value: 30 },
-                            { name: "Subchild 3b", value: 80 },
-                        ],
-                    },
-                ],
-            },
-        ],
-    }
+        name: folder.name,
+        value: folder.size,
+        children: folder.subfolders?.map(toIcicleData),
+    };
 }
 
 const ZoomableIcicle: React.FC = () => {
     const data = toIcicleData(useDriveData());
+    console.log(`SEB: data: ${JSON.stringify(data)}`);
     const svgRef = useRef<SVGSVGElement | null>(null);
 
     useEffect(() => {
