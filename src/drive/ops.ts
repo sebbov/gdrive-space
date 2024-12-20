@@ -5,13 +5,19 @@ import { gapi } from 'gapi-script';
 export const walkDrive = async (
     setData: (folder: Folder) => void,
 ): Promise<void> => {
-    const updateStateEvery = 100;
+    const updateStateEveryMillis = 1000;
     const concurrency = 10;
     const pageSize = 1000;
 
     const queue = new PQueue({ concurrency: concurrency });
     const rootFolder: Folder = { name: 'root', size: 0, subfolders: [] };
-    let processedEntries = 0;
+
+    // Throttle state updates.  These trigger potentially expensive rendering. Garbage
+    // collection has been observed not to keep up with the rate of memory allocations,
+    // resulting in crashing tabs.
+    const intervalId = window.setInterval(() => {
+        setData({ ...rootFolder });  // Shallow copy to ensure a state change is registered.
+    }, updateStateEveryMillis);
 
     const processFolder = async (folderId: string, folder: Folder) => {
         let nextPageToken: string | undefined = undefined;
@@ -37,17 +43,11 @@ export const walkDrive = async (
                 .filter((file) => file.size)
                 .map((file) => parseInt(file.size!, 10) || 0);
             folder.size += fileSizes.reduce((a: number, b: number) => a + b, 0);
-
-            processedEntries += files.length;
-            if (processedEntries >= updateStateEvery) {
-                setData({ ...rootFolder });  // Shallow copy to ensure a state change is registered.
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                processedEntries = 0;
-            }
         } while (nextPageToken);
     };
 
     queue.add(async () => await processFolder('root', rootFolder));
     await queue.onIdle();
+    clearInterval(intervalId);
     setData(rootFolder);
 };
