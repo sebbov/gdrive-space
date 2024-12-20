@@ -4,7 +4,7 @@ import ZoomableIcicle from './components/icicle.tsx';
 import { walkDrive } from './drive/ops.ts';
 import { Folder } from './drive/defs.ts';
 import { gapi } from 'gapi-script';
-
+import ProgressBar from './components/progress.tsx';
 
 const CLIENT_ID = '161482153716-nc2jdhntjl4aor8f9slfb40tu7gnnmvb.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
@@ -14,7 +14,7 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 function App() {
   const setData = useSetDriveData();
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
-  // const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const handleStart = async () => {
     setIsStartButtonDisabled(true);
@@ -30,6 +30,7 @@ function App() {
       if (!authInstance.isSignedIn.get()) {
         await authInstance.signIn();
       }
+      setIsSignedIn(true);
 
       await walkDrive((folder: Folder) => setData(folder));
 
@@ -53,6 +54,7 @@ function App() {
         </button>
       </div>
 
+      <ProgressBar enabled={isSignedIn} />
       <ZoomableIcicle />
     </>
   );
