@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSetDriveData } from './components/drivedata.tsx';
 import ZoomableIcicle from './components/icicle.tsx';
 import { walkDrive } from './drive/ops.ts';
 import { Folder } from './drive/defs.ts';
+import { devData } from './drive/fake.ts';
 import { gapi } from 'gapi-script';
 import ProgressBar from './components/progress.tsx';
 
@@ -15,6 +16,21 @@ function App() {
   const setData = useSetDriveData();
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key in devData) {
+        setData(devData[event.key]);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+
 
   const handleStart = async () => {
     setIsStartButtonDisabled(true);
