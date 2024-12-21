@@ -171,12 +171,12 @@ const ZoomableIcicle: React.FC = () => {
                                 <td className="p-2">{entry.name}</td>
                                 <td className="p-2">
                                     {entry.size < 1024
-                                        ? `${(entry.size).toFixed(2)} KB`
+                                        ? `${(entry.size).toFixed(2)} Bytes`
                                         : entry.size < 1024 * 1024
-                                            ? `${(entry.size / 1024).toFixed(2)} MB`
+                                            ? `${(entry.size / 1024).toFixed(2)} KB`
                                             : entry.size < 1024 * 1024 * 1024
-                                                ? `${(entry.size / (1024 * 1024)).toFixed(2)} GB`
-                                                : `${(entry.size / (1024 * 1024 * 1024)).toFixed(2)} TB`}
+                                                ? `${(entry.size / (1024 * 1024)).toFixed(2)} MB`
+                                                : `${(entry.size / (1024 * 1024 * 1024)).toFixed(2)} GB`}
                                 </td>
                             </tr>
                         ))}
