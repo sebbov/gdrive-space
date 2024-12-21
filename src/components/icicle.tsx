@@ -39,26 +39,13 @@ const ZoomableIcicle: React.FC = () => {
     useEffect(() => {
         if (!data) return;
 
-        currentRootPath.slice(1).forEach((name) => {
-            const newData = data.children?.find((c) => c.name == name)
-            if (newData) {
-                data = newData
-            } else {
-                throw new Error(`"${name}" not found in data`);
-            }
-        });
-
-
         const width = 800;
         const height = 400;
 
-        const root = d3
+        let root = d3
             .hierarchy<IcicleData>(data)
             .sum((d) => d.value || 0)
             .sort((a, b) => (b.value || 0) - (a.value || 0));
-
-        const partition = d3.partition<IcicleData>().size([width, height]);
-        const rootRectangular = partition(root);
 
         const rootNodeColor = '#f0f0f0';
 
@@ -76,6 +63,19 @@ const ZoomableIcicle: React.FC = () => {
                 colorMap[descendant.data.name || ''] = colorForChild;
             });
         });
+
+
+        currentRootPath.slice(1).forEach((name) => {
+            const next = root.children?.find((n) => n.data.name == name)
+            if (next) {
+                root = next.copy();
+            } else {
+                throw new Error(`"${name}" not found in data`);
+            }
+        });
+
+        const partition = d3.partition<IcicleData>().size([width, height]);
+        const rootRectangular = partition(root);
 
         const svg = d3
             .select(svgRef.current)
