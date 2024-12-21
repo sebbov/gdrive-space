@@ -3,6 +3,11 @@ import * as d3 from 'd3';
 import { useDriveData } from './drivedata.tsx';
 import { Folder } from '../drive/defs.ts';
 
+interface tableData {
+    name: string;
+    size: number;
+    children: tableEntry[];
+}
 interface tableEntry {
     color: string;
     name: string;
@@ -14,6 +19,15 @@ interface IcicleData {
     value?: number;
     children?: IcicleData[];
 }
+
+const toHumanReadableStorageSize = (n: number): string => (n < 1024
+    ? `${n.toFixed(2)} Bytes`
+    : n < 1024 * 1024
+        ? `${(n / 1024).toFixed(2)} KB`
+        : n < 1024 * 1024 * 1024
+            ? `${(n / (1024 * 1024)).toFixed(2)} MB`
+            : `${(n / (1024 * 1024 * 1024)).toFixed(2)} GB`
+)
 
 const toIcicleData = (folder: Folder): IcicleData => {
     return {
@@ -28,7 +42,7 @@ const ZoomableIcicle: React.FC = () => {
     const svgRef = useRef<SVGSVGElement | null>(null);
 
     const [currentRootPath, setCurrentRootPath] = useState(["root"]);
-    const [tableData, setTableData] = useState<tableEntry[]>([]);
+    const [tableData, setTableData] = useState<tableData>({ name: 'root', size: 0, children: [] });
 
     const getPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
         const path: string[] = [];
@@ -98,13 +112,15 @@ const ZoomableIcicle: React.FC = () => {
         const partition = d3.partition<IcicleData>().size([width, height]).padding(1);
         const rootRectangular = partition(root);
 
-        const rootTableData: tableEntry[] = root.children?.map((node) => {
-            return {
+        const rootTableData: tableData = {
+            name: root.data.name,
+            size: root.value || 0,
+            children: root.children?.map((node) => ({
                 color: colorMap[JSON.stringify(getAbsPath(node))],
                 name: node.data.name,
                 size: node.value || 0,
-            };
-        }) || [];
+            })) || []
+        };
         setTableData(rootTableData);
 
         svg.selectAll('*').remove();
@@ -131,13 +147,15 @@ const ZoomableIcicle: React.FC = () => {
                 }
             })
             .on('mouseover', function(_event, d) {
-                const selectedTableData: tableEntry[] = d.children?.map((node) => {
-                    return {
+                const selectedTableData: tableData = {
+                    name: d.data.name,
+                    size: d.value || 0,
+                    children: d.children?.map((node) => ({
                         color: colorMap[JSON.stringify(getAbsPath(node))],
                         name: node.data.name,
                         size: node.value || 0,
-                    };
-                }) || [];
+                    })) || [],
+                }
                 setTableData(selectedTableData);
                 d3.select(this)
                     .style('stroke', '#333')
@@ -151,31 +169,26 @@ const ZoomableIcicle: React.FC = () => {
     }, [currentRootPath, driveData]);
 
     return (
-        <div className="flex items-start">
-            <svg ref={svgRef} className="w-2/3"></svg>
-            <div className="w-1/3 overflow-auto">
+        <div className="flex items-start gap-4">
+            <svg ref={svgRef} className="w-1/2"></svg>
+            <div className="w-1/2 overflow-auto">
+                <h3 className="text-2xl font-semibold">
+                    {tableData.name} ({toHumanReadableStorageSize(tableData.size)})
+                </h3>
                 <table className="w-full">
                     <tbody>
-                        {tableData.map((entry, index) => (
+                        {tableData.children.map((entry, index) => (
                             <tr
                                 key={index}
                             >
-                                <td className="p-2">
+                                <td className="p-0">
                                     <div
                                         className="inline-block w-4 h-4 border border-white"
                                         style={{ backgroundColor: entry.color }}
                                     />
                                 </td>
-                                <td className="p-2">{entry.name}</td>
-                                <td className="p-2">
-                                    {entry.size < 1024
-                                        ? `${(entry.size).toFixed(2)} Bytes`
-                                        : entry.size < 1024 * 1024
-                                            ? `${(entry.size / 1024).toFixed(2)} KB`
-                                            : entry.size < 1024 * 1024 * 1024
-                                                ? `${(entry.size / (1024 * 1024)).toFixed(2)} MB`
-                                                : `${(entry.size / (1024 * 1024 * 1024)).toFixed(2)} GB`}
-                                </td>
+                                <td className="p-0">{entry.name}</td>
+                                <td className="p-0">{toHumanReadableStorageSize(entry.size)}</td>
                             </tr>
                         ))}
                     </tbody>
