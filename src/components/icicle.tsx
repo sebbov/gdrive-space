@@ -12,12 +12,16 @@ interface tableEntry {
     color: string;
     name: string;
     size: number;
+    // TODO(seb): Make optional.
+    select: () => void;
+    deselect: () => void;
 }
 
 interface IcicleData {
     name: string;
     value?: number;
     children?: IcicleData[];
+    rect?: SVGElement,
 }
 
 const toHumanReadableStorageSize = (n: number): string => (n < 1024
@@ -119,6 +123,15 @@ const ZoomableIcicle: React.FC = () => {
                 color: colorMap[JSON.stringify(getAbsPath(node))],
                 name: node.data.name,
                 size: node.value || 0,
+                select: () => {
+                    if (node.data.rect) d3.select(node.data.rect)
+                        .style('stroke', '#333')
+                        .style('stroke-width', 2);
+                },
+                deselect: () => {
+                    if (node.data.rect) d3.select(node.data.rect)
+                        .style('stroke-width', 0);
+                },
             })) || []
         };
         setTableData(rootTableData);
@@ -135,6 +148,9 @@ const ZoomableIcicle: React.FC = () => {
             .attr('height', (d) => d.y1 - d.y0)
             .attr('fill', (d) => colorMap[JSON.stringify(getAbsPath(d))])
             .style('cursor', 'pointer')
+            .each(function(d) {
+                d.data.rect = this;
+            })
             .on('click', (_event, d) => {
                 // Go up one level if clicking on the top node.  Otherwise zoom in to
                 // clicked-on node.
@@ -154,6 +170,8 @@ const ZoomableIcicle: React.FC = () => {
                         color: colorMap[JSON.stringify(getAbsPath(node))],
                         name: node.data.name,
                         size: node.value || 0,
+                        select: () => { },
+                        deselect: () => { },
                     })) || [],
                 }
                 setTableData(selectedTableData);
@@ -168,6 +186,7 @@ const ZoomableIcicle: React.FC = () => {
             });
     }, [currentRootPath, driveData]);
 
+    // TODO(seb): Pointer cursor on tr.
     return (
         <div className="flex items-start gap-4">
             <svg ref={svgRef} className="w-1/2"></svg>
@@ -180,6 +199,8 @@ const ZoomableIcicle: React.FC = () => {
                         {tableData.children.map((entry, index) => (
                             <tr
                                 key={index}
+                                onMouseOver={() => entry.select()}
+                                onMouseOut={() => entry.deselect()}
                             >
                                 <td className="p-0">
                                     <div
