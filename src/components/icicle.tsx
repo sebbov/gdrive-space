@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { useDriveData } from './drivedata.tsx';
 import { Folder } from '../drive/defs.ts';
@@ -18,12 +18,36 @@ const toIcicleData = (folder: Folder): IcicleData => {
 }
 
 const ZoomableIcicle: React.FC = () => {
-    const data = toIcicleData(useDriveData());
-    console.log(`SEB: data: ${JSON.stringify(data)}`);
+    let data = toIcicleData(useDriveData());
     const svgRef = useRef<SVGSVGElement | null>(null);
+
+    const [currentRootPath, setCurrentRootPath] = useState(["root"]);
+
+    const getPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
+        const path: string[] = [];
+        while (node) {
+            path.unshift(node.data.name);
+            node = node.parent!;
+        }
+        return path;
+    }
+
+    const getAbsPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
+        return currentRootPath.concat(getPath(node).slice(1));
+    }
 
     useEffect(() => {
         if (!data) return;
+
+        currentRootPath.slice(1).forEach((name) => {
+            const newData = data.children?.find((c) => c.name == name)
+            if (newData) {
+                data = newData
+            } else {
+                throw new Error(`"${name}" not found in data`);
+            }
+        });
+
 
         const width = 800;
         const height = 400;
@@ -36,10 +60,7 @@ const ZoomableIcicle: React.FC = () => {
         const partition = d3.partition<IcicleData>().size([width, height]);
         const rootRectangular = partition(root);
 
-        let currentRoot = rootRectangular;
-
         const rootNodeColor = '#f0f0f0';
-        const rootTextColor = '#000';
 
         const color = d3.scaleOrdinal(
             d3.quantize(d3.interpolateRainbow, (root.children?.length || 0) + 1)
@@ -63,7 +84,7 @@ const ZoomableIcicle: React.FC = () => {
 
         svg.selectAll('*').remove();
 
-        const rect = svg
+        svg
             .selectAll<SVGRectElement, d3.HierarchyRectangularNode<IcicleData>>('rect')
             .data(rootRectangular.descendants())
             .join('rect')
@@ -76,70 +97,16 @@ const ZoomableIcicle: React.FC = () => {
             .style('stroke-width', 1)
             .style('cursor', 'pointer')
             .on('click', (_event, d) => {
-                if (currentRoot === d) {
-                    zoom(rootRectangular);
+                // Go up one level if clicking on the top node.  Otherwise zoom in to
+                // clicked-on node.
+                if (rootRectangular === d) {
+                    if (currentRootPath.length > 1) {
+                        setCurrentRootPath(currentRootPath.slice(0, -1)); // up one
+                    } // Otherwise already at root, do nothing.
                 } else {
-                    zoom(d);
+                    setCurrentRootPath(getAbsPath(d));
                 }
-                currentRoot = d;
             });
-
-        const text = svg
-            .selectAll<SVGTextElement, d3.HierarchyRectangularNode<IcicleData>>('text')
-            .data(rootRectangular.descendants())
-            .join('text')
-            .attr('x', (d) => d.x0 + 4)
-            .attr('y', (d) => (d.y1 + d.y0) / 2)
-            .attr('dy', '0.35em')
-            .text((d) => d.data.name)
-            .style('fill', (d) => (d === rootRectangular ? rootTextColor : '#000'))
-            .style('display', (d) => (d.x1 - d.x0 > 40 ? null : 'none'));
-
-        const humanReadableSize = (value: number) => {
-            if (value === 0) return "0 Bytes";
-            const units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB"];
-            const i = Math.floor(Math.log(value) / Math.log(1024));
-            const readableValue = (value / Math.pow(1024, i)).toFixed(2);
-            return `${readableValue} ${units[i]}`;
-        }
-        const valueText = svg
-            .selectAll<SVGTextElement, d3.HierarchyRectangularNode<IcicleData>>('.value')
-            .data(rootRectangular.descendants())
-            .join('text')
-            .attr('class', 'value')
-            .attr('x', (d) => d.x0 + 4)
-            .attr('y', (d) => (d.y1 + d.y0) / 2 + 12)
-            .attr('dy', '0.35em')
-            .text((d) => (d.value ? `(${humanReadableSize(d.value)})` : ''))
-            .style('display', (d) => (d.x1 - d.x0 > 40 ? null : 'none'));
-
-        const zoom = (d: d3.HierarchyRectangularNode<IcicleData>) => {
-            const xScale = d3.scaleLinear().domain([d.x0, d.x1]).range([0, width]);
-            const yScale = d3.scaleLinear().domain([d.y0, height]).range([0, height]);
-
-            rect.transition()
-                .duration(750)
-                .attr('x', (d) => xScale(d.x0))
-                .attr('y', (d) => yScale(d.y0))
-                .attr('width', (d) => xScale(d.x1) - xScale(d.x0))
-                .attr('height', (d) => yScale(d.y1) - yScale(d.y0));
-
-            text.transition()
-                .duration(750)
-                .attr('x', (d) => xScale(d.x0) + 4)
-                .attr('y', (d) => (yScale(d.y1) + yScale(d.y0)) / 2)
-                .style('display', (d) =>
-                    xScale(d.x1) - xScale(d.x0) > 40 ? null : 'none'
-                );
-
-            valueText.transition()
-                .duration(750)
-                .attr('x', (d) => xScale(d.x0) + 4)
-                .attr('y', (d) => (yScale(d.y1) + yScale(d.y0)) / 2 + 12)
-                .style('display', (d) =>
-                    xScale(d.x1) - xScale(d.x0) > 40 ? null : 'none'
-                );
-        };
     }, [data]);
 
     return <svg ref={svgRef}> </svg>;
