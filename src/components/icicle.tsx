@@ -25,7 +25,7 @@ interface IcicleData {
 }
 
 const toHumanReadableStorageSize = (n: number): string => (n < 1024
-    ? `${n.toFixed(2)} Bytes`
+    ? `${n} Bytes`
     : n < 1024 * 1024
         ? `${(n / 1024).toFixed(2)} KB`
         : n < 1024 * 1024 * 1024
