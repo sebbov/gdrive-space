@@ -32,10 +32,6 @@ const ZoomableIcicle: React.FC = () => {
         return path;
     }
 
-    const getAbsPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
-        return currentRootPath.concat(getPath(node).slice(1));
-    }
-
     useEffect(() => {
         if (!data) return;
 
@@ -58,13 +54,13 @@ const ZoomableIcicle: React.FC = () => {
         );
 
         const colorMap: Record<string, string> = {};
-        colorMap[root.data.name || ''] = rootNodeColor;
+        colorMap[JSON.stringify(getPath(root))] = rootNodeColor;
 
         root.children?.forEach((child) => {
             const colorForChild = color(child.data.name || '');
-            colorMap[child.data.name || ''] = colorForChild;
+            colorMap[JSON.stringify(getPath(child))] = colorForChild;
             child.descendants().forEach((descendant) => {
-                colorMap[descendant.data.name || ''] = colorForChild;
+                colorMap[JSON.stringify(getPath(descendant))] = colorForChild;
             });
         });
 
@@ -76,8 +72,11 @@ const ZoomableIcicle: React.FC = () => {
                 throw new Error(`"${name}" not found in data`);
             }
         });
-        const origDepth = d3.max(root.descendants(), (node) => node.depth + 1) || 1;
+        const getAbsPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
+            return currentRootPath.concat(getPath(node).slice(1));
+        }
 
+        const origDepth = d3.max(root.descendants(), (node) => node.depth + 1) || 1;
         const maxDepth = 4;
         root.each((node) => {
             if (node.depth >= maxDepth) {
@@ -101,7 +100,7 @@ const ZoomableIcicle: React.FC = () => {
             .attr('y', (d) => d.y0)
             .attr('width', (d) => d.x1 - d.x0)
             .attr('height', (d) => d.y1 - d.y0)
-            .attr('fill', (d) => colorMap[d.data.name || ''])
+            .attr('fill', (d) => colorMap[JSON.stringify(getAbsPath(d))])
             .style('cursor', 'pointer')
             .on('click', (_event, d) => {
                 // Go up one level if clicking on the top node.  Otherwise zoom in to
@@ -114,12 +113,12 @@ const ZoomableIcicle: React.FC = () => {
                     setCurrentRootPath(getAbsPath(d));
                 }
             })
-            .on('mouseover', function(_event, d) {
+            .on('mouseover', function(_event, _d) {
                 d3.select(this)
                     .style('stroke', '#333')
                     .style('stroke-width', 2);
             })
-            .on('mouseout', function(_event, d) {
+            .on('mouseout', function(_event, _d) {
                 d3.select(this)
                     .style('stroke-width', 0);
             });
