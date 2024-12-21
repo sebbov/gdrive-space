@@ -40,7 +40,11 @@ const ZoomableIcicle: React.FC = () => {
         if (!data) return;
 
         const width = 800;
-        const height = 400;
+        let height = 400;
+        const svg = d3
+            .select(svgRef.current)
+            .attr('viewBox', [0, 0, width, height])
+            .style('font', '10px sans-serif');
 
         let root = d3
             .hierarchy<IcicleData>(data)
@@ -64,7 +68,6 @@ const ZoomableIcicle: React.FC = () => {
             });
         });
 
-
         currentRootPath.slice(1).forEach((name) => {
             const next = root.children?.find((n) => n.data.name == name)
             if (next) {
@@ -73,14 +76,20 @@ const ZoomableIcicle: React.FC = () => {
                 throw new Error(`"${name}" not found in data`);
             }
         });
+        const origDepth = d3.max(root.descendants(), (node) => node.depth + 1) || 1;
+
+        const maxDepth = 2;
+        root.each((node) => {
+            if (node.depth >= maxDepth) {
+                node.children = undefined;
+            }
+        });
+        const prunedDepth = d3.max(root.descendants(), (node) => node.depth + 1) || 1;
+        const prunedFactor = origDepth / prunedDepth;
+        height *= prunedFactor;
 
         const partition = d3.partition<IcicleData>().size([width, height]);
         const rootRectangular = partition(root);
-
-        const svg = d3
-            .select(svgRef.current)
-            .attr('viewBox', [0, 0, width, height])
-            .style('font', '10px sans-serif');
 
         svg.selectAll('*').remove();
 
