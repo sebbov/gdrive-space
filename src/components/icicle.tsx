@@ -7,7 +7,6 @@ interface tableEntry {
     color: string;
     name: string;
     size: number;
-    selected?: boolean;
 }
 
 interface IcicleData {
@@ -160,7 +159,6 @@ const ZoomableIcicle: React.FC = () => {
                         {tableData.map((entry, index) => (
                             <tr
                                 key={index}
-                                className={entry.selected ? 'font-bold' : ''}
                             >
                                 <td className="p-2">
                                     <div
