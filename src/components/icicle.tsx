@@ -78,7 +78,7 @@ const ZoomableIcicle: React.FC = () => {
         });
         const origDepth = d3.max(root.descendants(), (node) => node.depth + 1) || 1;
 
-        const maxDepth = 2;
+        const maxDepth = 4;
         root.each((node) => {
             if (node.depth >= maxDepth) {
                 node.children = undefined;
@@ -88,7 +88,7 @@ const ZoomableIcicle: React.FC = () => {
         const prunedFactor = origDepth / prunedDepth;
         height *= prunedFactor;
 
-        const partition = d3.partition<IcicleData>().size([width, height]);
+        const partition = d3.partition<IcicleData>().size([width, height]).padding(1);
         const rootRectangular = partition(root);
 
         svg.selectAll('*').remove();
@@ -102,8 +102,6 @@ const ZoomableIcicle: React.FC = () => {
             .attr('width', (d) => d.x1 - d.x0)
             .attr('height', (d) => d.y1 - d.y0)
             .attr('fill', (d) => colorMap[d.data.name || ''])
-            .style('stroke', '#fff')
-            .style('stroke-width', 1)
             .style('cursor', 'pointer')
             .on('click', (_event, d) => {
                 // Go up one level if clicking on the top node.  Otherwise zoom in to
@@ -115,6 +113,15 @@ const ZoomableIcicle: React.FC = () => {
                 } else {
                     setCurrentRootPath(getAbsPath(d));
                 }
+            })
+            .on('mouseover', function(_event, d) {
+                d3.select(this)
+                    .style('stroke', '#333')
+                    .style('stroke-width', 2);
+            })
+            .on('mouseout', function(_event, d) {
+                d3.select(this)
+                    .style('stroke-width', 0);
             });
     }, [data]);
 
