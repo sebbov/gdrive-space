@@ -2,9 +2,10 @@ import React from "react";
 
 interface PathProps {
     value: string[];
+    setCurrentRootPath: (path: string[]) => void;
 }
 
-const Path: React.FC<PathProps> = ({ value }) => {
+const Path: React.FC<PathProps> = ({ value, setCurrentRootPath }) => {
     return (
         <div className="flex items-center whitespace-nowrap overflow-hidden w-full">
             {value.map((component, index) => (
@@ -17,7 +18,7 @@ const Path: React.FC<PathProps> = ({ value }) => {
                             ? "p-2 text-2xl font-bold text-blue-600"
                             : "p-2 text-1xl font-bold text-blue-600"
                             } cursor-pointer`}
-                        onClick={() => console.log(`Clicked: ${component} ${index}`)}
+                        onClick={() => setCurrentRootPath(value.slice(0, index + 1))}
                         onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
                         onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
                     >

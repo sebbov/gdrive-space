@@ -196,7 +196,7 @@ const ZoomableIcicle: React.FC = () => {
     return (
         <>
             <div className="w-full">
-                <Path value={currentRootPath} />
+                <Path value={currentRootPath} setCurrentRootPath={setCurrentRootPath} />
             </div>
             <div className="flex items-start gap-4">
                 <svg ref={svgRef} className="w-1/2"></svg>
