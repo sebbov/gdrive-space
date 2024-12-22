@@ -201,7 +201,7 @@ const ZoomableIcicle: React.FC = () => {
             </div>
             <div className="flex items-start gap-4">
                 <svg ref={svgRef} className="w-1/2"></svg>
-                <div className="w-1/2 overflow-auto">
+                <div className="w-1/2 overflow-auto max-h-screen">
                     <table className="w-full">
                         <tbody>
                             <tr key="0">
