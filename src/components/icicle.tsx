@@ -6,7 +6,7 @@ import Path from './path.tsx';
 
 interface tableData {
     color: string;
-    name: string;
+    path: string[];
     size: number;
     children: tableEntry[];
 }
@@ -73,7 +73,7 @@ const ZoomableIcicle: React.FC = () => {
 
     const rootNodeColor = '#f0f0f0';
     const [currentRootPath, setCurrentRootPath] = useState(["root"]);
-    const [tableData, setTableData] = useState<tableData>({ name: 'root', size: 0, color: rootNodeColor, children: [] });
+    const [tableData, setTableData] = useState<tableData>({ path: ["root"], size: 0, color: rootNodeColor, children: [] });
 
     useEffect(() => {
         const data = toIcicleData(driveData);
@@ -122,7 +122,7 @@ const ZoomableIcicle: React.FC = () => {
         }
         const rootTableData: tableData = {
             color: colorMap[JSON.stringify(getAbsPath(root))],
-            name: root.data.name,
+            path: getAbsPath(root),
             size: root.value || 0,
             children: root.children?.map((node) => ({
                 color: colorMap[JSON.stringify(getAbsPath(node))],
@@ -170,7 +170,7 @@ const ZoomableIcicle: React.FC = () => {
             .on('mouseover', function(_event, d) {
                 const selectedTableData: tableData = {
                     color: colorMap[JSON.stringify(getAbsPath(d))],
-                    name: d.data.name,
+                    path: getAbsPath(d),
                     size: d.value || 0,
                     children: d.children?.map((node) => ({
                         color: colorMap[JSON.stringify(getAbsPath(node))],
@@ -210,14 +210,21 @@ const ZoomableIcicle: React.FC = () => {
                                         style={{ backgroundColor: tableData.color }}
                                     />
                                 </td>
-                                <td className="p-0 py-4 text-xl">{tableData.name}</td>
+                                <td className="p-0 py-4 text-xl">{tableData.path[tableData.path.length - 1]}</td>
                                 <td className="p-0 py-4 text-xl">{toHumanReadableStorageSize(tableData.size)}</td>
                             </tr>
                             {tableData.children.map((entry, index) => (
                                 <tr
                                     key={index + 1}
-                                    onMouseOver={() => entry.select()}
-                                    onMouseOut={() => entry.deselect()}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.textDecoration = "underline";
+                                        entry.select()
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.textDecoration = "none";
+                                        entry.deselect()
+                                    }}
+                                    onClick={() => setCurrentRootPath([...tableData.path, entry.name])}
                                 >
                                     <td className="p-0">
                                         <div
