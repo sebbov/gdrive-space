@@ -43,6 +43,30 @@ const toIcicleData = (folder: Folder): IcicleData => {
     };
 }
 
+const getPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
+    const path: string[] = [];
+    while (node) {
+        path.unshift(node.data.name);
+        node = node.parent!;
+    }
+    return path;
+}
+
+const getColorMap = (root: d3.HierarchyNode<IcicleData>): Record<string, string> => {
+    const width = 1000;
+    const partition = d3.partition<IcicleData>().size([width, 10 /* don't-care */]);
+    const rootRectangular = partition(root);
+
+    const colorMap: Record<string, string> = {};
+    rootRectangular.each((n) => {
+        const relCenterX = (n.x0 + n.x1) / 2 / width;
+        colorMap[JSON.stringify(getPath(n))] = d3.interpolateTurbo(relCenterX);
+    });
+
+    return colorMap;
+}
+
+
 const ZoomableIcicle: React.FC = () => {
     const driveData = useDriveData();
     const svgRef = useRef<SVGSVGElement | null>(null);
@@ -50,15 +74,6 @@ const ZoomableIcicle: React.FC = () => {
     const rootNodeColor = '#f0f0f0';
     const [currentRootPath, setCurrentRootPath] = useState(["root"]);
     const [tableData, setTableData] = useState<tableData>({ name: 'root', size: 0, color: rootNodeColor, children: [] });
-
-    const getPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
-        const path: string[] = [];
-        while (node) {
-            path.unshift(node.data.name);
-            node = node.parent!;
-        }
-        return path;
-    }
 
     useEffect(() => {
         const data = toIcicleData(driveData);
@@ -76,20 +91,7 @@ const ZoomableIcicle: React.FC = () => {
             .sum((d) => d.value || 0)
             .sort((a, b) => (b.value || 0) - (a.value || 0));
 
-        const color = d3.scaleOrdinal(
-            d3.quantize(d3.interpolateRainbow, (root.children?.length || 0) + 1)
-        );
-
-        const colorMap: Record<string, string> = {};
-        colorMap[JSON.stringify(getPath(root))] = rootNodeColor;
-
-        root.children?.forEach((child) => {
-            const colorForChild = color(child.data.name || '');
-            colorMap[JSON.stringify(getPath(child))] = colorForChild;
-            child.descendants().forEach((descendant) => {
-                colorMap[JSON.stringify(getPath(descendant))] = colorForChild;
-            });
-        });
+        const colorMap = getColorMap(root);
 
         currentRootPath.slice(1).forEach((name) => {
             const next = root.children?.find((n) => n.data.name == name)
@@ -99,9 +101,6 @@ const ZoomableIcicle: React.FC = () => {
                 throw new Error(`"${name}" not found in data`);
             }
         });
-        const getAbsPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
-            return currentRootPath.concat(getPath(node).slice(1));
-        }
 
         const origDepth = d3.max(root.descendants(), (node) => node.depth + 1) || 1;
         const maxDepth = 4;
@@ -117,6 +116,10 @@ const ZoomableIcicle: React.FC = () => {
         const partition = d3.partition<IcicleData>().size([width, height]).padding(1);
         const rootRectangular = partition(root);
 
+
+        const getAbsPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
+            return currentRootPath.concat(getPath(node).slice(1));
+        }
         const rootTableData: tableData = {
             color: colorMap[JSON.stringify(getAbsPath(root))],
             name: root.data.name,
