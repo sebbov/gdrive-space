@@ -2,8 +2,10 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { useDriveData } from './drivedata.tsx';
 import { Folder } from '../drive/defs.ts';
+import Path from './path.tsx';
 
 interface tableData {
+    color: string;
     name: string;
     size: number;
     children: tableEntry[];
@@ -45,8 +47,9 @@ const ZoomableIcicle: React.FC = () => {
     const driveData = useDriveData();
     const svgRef = useRef<SVGSVGElement | null>(null);
 
+    const rootNodeColor = '#f0f0f0';
     const [currentRootPath, setCurrentRootPath] = useState(["root"]);
-    const [tableData, setTableData] = useState<tableData>({ name: 'root', size: 0, children: [] });
+    const [tableData, setTableData] = useState<tableData>({ name: 'root', size: 0, color: rootNodeColor, children: [] });
 
     const getPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
         const path: string[] = [];
@@ -72,8 +75,6 @@ const ZoomableIcicle: React.FC = () => {
             .hierarchy<IcicleData>(data)
             .sum((d) => d.value || 0)
             .sort((a, b) => (b.value || 0) - (a.value || 0));
-
-        const rootNodeColor = '#f0f0f0';
 
         const color = d3.scaleOrdinal(
             d3.quantize(d3.interpolateRainbow, (root.children?.length || 0) + 1)
@@ -117,6 +118,7 @@ const ZoomableIcicle: React.FC = () => {
         const rootRectangular = partition(root);
 
         const rootTableData: tableData = {
+            color: colorMap[JSON.stringify(getAbsPath(root))],
             name: root.data.name,
             size: root.value || 0,
             children: root.children?.map((node) => ({
@@ -164,6 +166,7 @@ const ZoomableIcicle: React.FC = () => {
             })
             .on('mouseover', function(_event, d) {
                 const selectedTableData: tableData = {
+                    color: colorMap[JSON.stringify(getAbsPath(d))],
                     name: d.data.name,
                     size: d.value || 0,
                     children: d.children?.map((node) => ({
@@ -188,34 +191,46 @@ const ZoomableIcicle: React.FC = () => {
 
     // TODO(seb): Pointer cursor on tr.
     return (
-        <div className="flex items-start gap-4">
-            <svg ref={svgRef} className="w-1/2"></svg>
-            <div className="w-1/2 overflow-auto">
-                <h3 className="text-2xl font-semibold">
-                    {tableData.name} ({toHumanReadableStorageSize(tableData.size)})
-                </h3>
-                <table className="w-full">
-                    <tbody>
-                        {tableData.children.map((entry, index) => (
-                            <tr
-                                key={index}
-                                onMouseOver={() => entry.select()}
-                                onMouseOut={() => entry.deselect()}
-                            >
-                                <td className="p-0">
+        <>
+            <div className="w-full">
+                <Path value={currentRootPath} />
+            </div>
+            <div className="flex items-start gap-4">
+                <svg ref={svgRef} className="w-1/2"></svg>
+                <div className="w-1/2 overflow-auto">
+                    <table className="w-full">
+                        <tbody>
+                            <tr key="0">
+                                <td className="p-0 py-4">
                                     <div
-                                        className="inline-block w-4 h-4 border border-white"
-                                        style={{ backgroundColor: entry.color }}
+                                        className="inline-block w-6 h-6 border border-white"
+                                        style={{ backgroundColor: tableData.color }}
                                     />
                                 </td>
-                                <td className="p-0">{entry.name}</td>
-                                <td className="p-0">{toHumanReadableStorageSize(entry.size)}</td>
+                                <td className="p-0 py-4 text-xl">{tableData.name}</td>
+                                <td className="p-0 py-4 text-xl">{toHumanReadableStorageSize(tableData.size)}</td>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                            {tableData.children.map((entry, index) => (
+                                <tr
+                                    key={index + 1}
+                                    onMouseOver={() => entry.select()}
+                                    onMouseOut={() => entry.deselect()}
+                                >
+                                    <td className="p-0">
+                                        <div
+                                            className="inline-block w-4 h-4 border border-white"
+                                            style={{ backgroundColor: entry.color }}
+                                        />
+                                    </td>
+                                    <td className="p-0">{entry.name}</td>
+                                    <td className="p-0">{toHumanReadableStorageSize(entry.size)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
