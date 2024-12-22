@@ -103,7 +103,7 @@ const ZoomableIcicle: React.FC = () => {
         });
 
         const origDepth = d3.max(root.descendants(), (node) => node.depth + 1) || 1;
-        const maxDepth = 4;
+        const maxDepth = 5;
         root.each((node) => {
             if (node.depth >= maxDepth) {
                 node.children = undefined;
@@ -143,9 +143,10 @@ const ZoomableIcicle: React.FC = () => {
 
         svg.selectAll('*').remove();
 
+        const minWidthFraction = 0.001;
         svg
             .selectAll<SVGRectElement, d3.HierarchyRectangularNode<IcicleData>>('rect')
-            .data(rootRectangular.descendants())
+            .data(rootRectangular.descendants().filter((d) => (d.x1 - d.x0) > minWidthFraction * width))
             .join('rect')
             .attr('x', (d) => d.x0)
             .attr('y', (d) => d.y0)
