@@ -24,7 +24,7 @@ export const walkDrive = async (
         do {
             const response = await gapi.client.drive.files.list({
                 q: `'${folderId}' in parents`,
-                fields: 'nextPageToken, files(id, name, mimeType, size)',
+                fields: 'nextPageToken, files(id, name, mimeType, quotaBytesUsed)',
                 pageSize: pageSize,
                 pageToken: nextPageToken,
             });
@@ -40,8 +40,8 @@ export const walkDrive = async (
                 }));
 
             const fileSizes: number[] = files
-                .filter((file) => file.size)
-                .map((file) => parseInt(file.size!, 10) || 0);
+                .filter((file) => file.quotaBytesUsed)
+                .map((file) => parseInt(file.quotaBytesUsed!, 10) || 0);
             folder.size += fileSizes.reduce((a: number, b: number) => a + b, 0);
         } while (nextPageToken);
     };
