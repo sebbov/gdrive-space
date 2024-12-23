@@ -11,12 +11,16 @@ const Path: React.FC<PathProps> = ({ value, setCurrentRootPath }) => {
             {value.map((component, index) => (
                 <React.Fragment key={index}>
                     {index !== 0 && (
-                        <span className="p-2 text-1xl font-bold text-blue-600 select-none">/</span>
+                        <span
+                            className="p-2 text-1xl font-bold text-logo-space-blue select-none"
+                        >
+                            /
+                        </span>
                     )}
                     <span
                         className={`${index === value.length - 1
-                            ? "p-2 text-2xl font-bold text-blue-600"
-                            : "p-2 text-1xl font-bold text-blue-600"
+                            ? "p-2 text-2xl font-bold text-logo-space-blue"
+                            : "p-2 text-1xl font-bold text-logo-space-blue"
                             } cursor-pointer`}
                         onClick={() => setCurrentRootPath(value.slice(0, index + 1))}
                         onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}

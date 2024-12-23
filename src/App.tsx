@@ -84,11 +84,18 @@ function App() {
     gapi.load('client:auth2', initClient);
   };
 
-
   return (
-    <>
-      <div className="flex items-center justify-between p-4">
-        <h1 className="text-3xl font-bold text-blue-600">GDrive Space</h1>
+    <div
+      style={{
+        backgroundImage: "url('/assets/starfield.jpg')",
+        backgroundRepeat: "repeat",
+        backgroundSize: "auto",
+        minHeight: "100vh",
+      }}
+    >
+      <div className="flex items-center p-2 cursor-pointer" onClick={() => goTo({ path: "/" })}>
+        <img src="/assets/gdrive.png" width="10%" height="10%" />
+        <img src="/assets/space.png" width="10%" height="10%" />
       </div>
 
       {currentPath.startsWith("/d/") ? (
@@ -103,13 +110,12 @@ function App() {
         <button
           onClick={handleStart}
           disabled={isStartButtonDisabled}
-          className={`px-4 py-2 text-white font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
-            }`}
+          className={`px-4 py-2 text-white font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
         >
           {isStartButtonDisabled ? 'Running...' : 'Start'}
         </button>
       )}
-    </>
+    </div>
   );
 }
 

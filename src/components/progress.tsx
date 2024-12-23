@@ -54,10 +54,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ enabled }) => {
             {enabled ? (
                 <div className="relative w-full bg-gray-400 h-6">
                     <div
-                        className="bg-blue-500 h-6"
+                        className="h-6 bg-logo-gdrive-yellow"
                         style={{ width: `${percentage}%` }}
                     />
-                    <span className="absolute inset-0 flex items-center justify-center text-white font-bold">
+                    <span className="absolute inset-0 flex items-center justify-center text-black font-bold">
                         {Math.min(100, Math.max(0, percentage!))}%
                     </span>
                 </div>

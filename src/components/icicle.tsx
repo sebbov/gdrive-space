@@ -227,7 +227,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                                 <tr key="0">
                                     <td className="p-0 py-4">
                                         <div
-                                            className="inline-block w-6 h-6 border border-white"
+                                            className="inline-block w-6 h-6"
                                             style={{ backgroundColor: tableData.color }}
                                         />
                                     </td>
@@ -238,8 +238,10 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                                     <tr
                                         key={index + 1}
                                         onMouseOver={(e) => {
-                                            e.currentTarget.style.textDecoration = "underline";
-                                            entry.select?.()
+                                            if (entry.select) {
+                                                e.currentTarget.style.textDecoration = "underline";
+                                                entry.select()
+                                            }
                                         }}
                                         onMouseOut={(e) => {
                                             e.currentTarget.style.textDecoration = "none";
@@ -249,7 +251,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                                     >
                                         <td className="p-0">
                                             <div
-                                                className="inline-block w-4 h-4 border border-white"
+                                                className="inline-block w-4 h-4"
                                                 style={{ backgroundColor: entry.color }}
                                             />
                                         </td>
