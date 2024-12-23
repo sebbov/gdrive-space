@@ -6,6 +6,9 @@ interface ProgressBarProps {
     enabled: boolean;
 }
 
+// An upper limit for Drive storage for the lifetime of this app.
+const hellaByte = 2 ** 90;
+
 const ProgressBar: React.FC<ProgressBarProps> = ({ enabled }) => {
     const [totalSize, setTotalSize] = useState<number | undefined>(undefined);
 
@@ -14,6 +17,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ enabled }) => {
             setTotalSize(undefined);
             return;
         }
+
+        setTotalSize(hellaByte);
 
         const getTotalSize = async () => {
             const response = await gapi.client.drive.about.get({
