@@ -20,9 +20,8 @@ interface tableEntry {
     color: string;
     name: string;
     size: number;
-    // TODO(seb): Make optional.
-    select: () => void;
-    deselect: () => void;
+    select?: () => void;
+    deselect?: () => void;
 }
 
 interface IcicleData {
@@ -126,7 +125,23 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
         const getAbsPath = (node: d3.HierarchyNode<IcicleData>): string[] => {
             return currentRootPath.concat(getPath(node).slice(1));
         }
-        const rootTableData: tableData = {
+
+        const addFilesAtThisLevel = (node: d3.HierarchyNode<IcicleData>, tableData: tableData) => {
+            const filesSizeChild = {
+                color: "#aaa",
+                name: "[Files at this level]",
+                size: (node.value || 0) - (node.children?.reduce((sum, child) => sum + (child.value || 0), 0) || 0),
+            }
+            const insertIndex = tableData.children.findIndex(child => child.size < filesSizeChild.size);
+            if (insertIndex === -1) {
+                tableData.children.push(filesSizeChild);
+            } else {
+                tableData.children.splice(insertIndex, 0, filesSizeChild);
+            }
+            return tableData;
+        }
+
+        const rootTableData: tableData = addFilesAtThisLevel(root, {
             color: colorMap[JSON.stringify(getAbsPath(root))],
             path: getAbsPath(root),
             size: root.value || 0,
@@ -144,7 +159,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                         .style('stroke-width', 0);
                 },
             })) || []
-        };
+        });
         setTableData(rootTableData);
 
         svg.selectAll('*').remove();
@@ -175,7 +190,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                 }
             })
             .on('mouseover', function(_event, d) {
-                const selectedTableData: tableData = {
+                const selectedTableData: tableData = addFilesAtThisLevel(d, {
                     color: colorMap[JSON.stringify(getAbsPath(d))],
                     path: getAbsPath(d),
                     size: d.value || 0,
@@ -183,10 +198,8 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                         color: colorMap[JSON.stringify(getAbsPath(node))],
                         name: node.data.name,
                         size: node.value || 0,
-                        select: () => { },
-                        deselect: () => { },
                     })) || [],
-                }
+                });
                 setTableData(selectedTableData);
                 d3.select(this)
                     .style('stroke', '#333')
@@ -226,11 +239,11 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                                         key={index + 1}
                                         onMouseOver={(e) => {
                                             e.currentTarget.style.textDecoration = "underline";
-                                            entry.select()
+                                            entry.select?.()
                                         }}
                                         onMouseOut={(e) => {
                                             e.currentTarget.style.textDecoration = "none";
-                                            entry.deselect()
+                                            entry.deselect?.()
                                         }}
                                         onClick={() => setCurrentRootPath([...tableData.path, entry.name])}
                                     >
