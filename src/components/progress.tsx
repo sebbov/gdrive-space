@@ -46,9 +46,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ enabled }) => {
     return (
         <>
             {enabled ? (
-                <div className="relative w-full bg-gray-400 rounded-full h-6">
+                <div className="relative w-full bg-gray-400 h-6">
                     <div
-                        className="bg-blue-500 h-6 rounded-full"
+                        className="bg-blue-500 h-6"
                         style={{ width: `${percentage}%` }}
                     />
                     <span className="absolute inset-0 flex items-center justify-center text-white font-bold">
