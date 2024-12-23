@@ -210,6 +210,20 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                 d3.select(this)
                     .style('stroke-width', 0);
             });
+
+        svg
+            .selectAll<SVGTextElement, d3.HierarchyRectangularNode<IcicleData>>('text')
+            .data([rootRectangular])
+            .join('text')
+            .attr('x', (d) => (d.x0 + d.x1) / 2)
+            .attr('y', (d) => (d.y0 + d.y1) / 2)
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'middle')
+            .text((d) => toHumanReadableStorageSize(d.value || 0))
+            .style('font-family', 'Courier New, monospace')
+            .style('font-size', (d) => Math.max(12, Math.min(32, (d.x1 - d.x0) / 4)) + 'px')
+            .style('font-weight', 'bold')
+            .style('fill', 'black');
     }, [currentRootPath, driveData]);
 
     // TODO(seb): Pointer cursor on tr.
