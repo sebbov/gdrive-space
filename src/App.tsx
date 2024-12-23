@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSetDriveData } from './components/drivedata.tsx';
+import { useDriveData, useSetDriveData } from './components/drivedata.tsx';
 import ZoomableIcicle from './components/icicle.tsx';
 import { walkDrive } from './drive/ops.ts';
 import { Folder } from './drive/defs.ts';
@@ -13,7 +13,8 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 
 
 function App() {
-  const setData = useSetDriveData();
+  const driveData = useDriveData();
+  const setDriveData = useSetDriveData();
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentPath, setCurrentPath] = useState(decodeURIComponent(window.location.pathname));
@@ -42,7 +43,8 @@ function App() {
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key in devData) {
-        setData(devData[event.key]);
+        setDriveData(devData[event.key]);
+        goTo({ path: "/d/", fragment: "My Drive" });
       }
     }
 
@@ -53,6 +55,11 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!driveData) {
+      goTo({ path: "/" });
+    }
+  }, [driveData]);
 
   const handleStart = async () => {
     setIsStartButtonDisabled(true);
@@ -71,7 +78,7 @@ function App() {
       setIsSignedIn(true);
 
       goTo({ path: "/d/", fragment: "My Drive" });
-      await walkDrive((folder: Folder) => setData(folder));
+      await walkDrive((folder: Folder) => setDriveData(folder));
       setIsStartButtonDisabled(false);
     }
     gapi.load('client:auth2', initClient);
@@ -82,14 +89,6 @@ function App() {
     <>
       <div className="flex items-center justify-between p-4">
         <h1 className="text-3xl font-bold text-blue-600">GDrive Space</h1>
-        <button
-          onClick={handleStart}
-          disabled={isStartButtonDisabled}
-          className={`px-4 py-2 text-white font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
-            }`}
-        >
-          {isStartButtonDisabled ? 'Running...' : 'Start'}
-        </button>
       </div>
 
       {currentPath.startsWith("/d/") ? (
@@ -101,7 +100,14 @@ function App() {
           />
         </>
       ) : (
-        <h1>Start page...</h1>
+        <button
+          onClick={handleStart}
+          disabled={isStartButtonDisabled}
+          className={`px-4 py-2 text-white font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'
+            }`}
+        >
+          {isStartButtonDisabled ? 'Running...' : 'Start'}
+        </button>
       )}
     </>
   );

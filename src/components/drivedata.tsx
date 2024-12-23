@@ -2,20 +2,14 @@ import React, { createContext, useContext, useState } from 'react';
 import { Folder } from '../drive/defs.ts';
 
 interface DriveDataContextType {
-    data: Folder;
-    setData: React.Dispatch<React.SetStateAction<Folder>>;
+    data: Folder | undefined;
+    setData: React.Dispatch<React.SetStateAction<Folder | undefined>>;
 }
-
-const initialRoot: Folder = {
-    name: "My Drive",
-    subfolders: [],
-    size: 0,
-};
 
 const DriveDataContext = createContext<DriveDataContextType | null>(null);
 
 export const DriveDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [data, setData] = useState(initialRoot);
+    const [data, setData] = useState<Folder | undefined>(undefined);
 
     return (
         <DriveDataContext.Provider value={{ data, setData }}>
@@ -24,7 +18,7 @@ export const DriveDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     );
 };
 
-export const useDriveData = (): Folder => {
+export const useDriveData = (): Folder | undefined => {
     const context = useContext(DriveDataContext);
     if (!context) {
         throw new Error("useDriveData must be used within a DriveDataProvider");
@@ -32,7 +26,7 @@ export const useDriveData = (): Folder => {
     return context.data;
 };
 
-export const useSetDriveData = (): React.Dispatch<React.SetStateAction<Folder>> => {
+export const useSetDriveData = (): React.Dispatch<React.SetStateAction<Folder | undefined>> => {
     const context = useContext(DriveDataContext);
     if (!context) {
         throw new Error("useSetDriveData must be used within a DriveDataProvider");

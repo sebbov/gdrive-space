@@ -33,7 +33,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ enabled }) => {
 
     let percentage = undefined;
     const data = useDriveData();
-    const calculateTotalSize = (folder: Folder): number => {
+    const calculateTotalSize = (folder: Folder | undefined): number => {
+        if (!folder) return 0;
         let totalSize = folder.size;
         for (const subfolder of folder.subfolders) {
             totalSize += calculateTotalSize(subfolder);

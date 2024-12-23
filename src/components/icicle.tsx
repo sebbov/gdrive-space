@@ -77,10 +77,11 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
     const driveData = useDriveData();
     const svgRef = useRef<SVGSVGElement | null>(null);
 
-    const rootNodeColor = '#f0f0f0';
-    const [tableData, setTableData] = useState<tableData>({ path: ["My Drive"], size: 0, color: rootNodeColor, children: [] });
+    const [tableData, setTableData] = useState<tableData | undefined>(undefined);
 
     useEffect(() => {
+        if (!driveData) return;
+
         const data = toIcicleData(driveData);
         if (!data) return;
 
@@ -207,43 +208,45 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
             <div className="flex items-start gap-4">
                 <svg ref={svgRef} className="w-1/2"></svg>
                 <div className="w-1/2 overflow-auto max-h-screen">
-                    <table className="w-full">
-                        <tbody>
-                            <tr key="0">
-                                <td className="p-0 py-4">
-                                    <div
-                                        className="inline-block w-6 h-6 border border-white"
-                                        style={{ backgroundColor: tableData.color }}
-                                    />
-                                </td>
-                                <td className="p-0 py-4 text-xl">{tableData.path[tableData.path.length - 1]}</td>
-                                <td className="p-0 py-4 text-xl">{toHumanReadableStorageSize(tableData.size)}</td>
-                            </tr>
-                            {tableData.children.map((entry, index) => (
-                                <tr
-                                    key={index + 1}
-                                    onMouseOver={(e) => {
-                                        e.currentTarget.style.textDecoration = "underline";
-                                        entry.select()
-                                    }}
-                                    onMouseOut={(e) => {
-                                        e.currentTarget.style.textDecoration = "none";
-                                        entry.deselect()
-                                    }}
-                                    onClick={() => setCurrentRootPath([...tableData.path, entry.name])}
-                                >
-                                    <td className="p-0">
+                    {tableData && (
+                        <table className="w-full">
+                            <tbody>
+                                <tr key="0">
+                                    <td className="p-0 py-4">
                                         <div
-                                            className="inline-block w-4 h-4 border border-white"
-                                            style={{ backgroundColor: entry.color }}
+                                            className="inline-block w-6 h-6 border border-white"
+                                            style={{ backgroundColor: tableData.color }}
                                         />
                                     </td>
-                                    <td className="p-0">{entry.name}</td>
-                                    <td className="p-0">{toHumanReadableStorageSize(entry.size)}</td>
+                                    <td className="p-0 py-4 text-xl">{tableData.path[tableData.path.length - 1]}</td>
+                                    <td className="p-0 py-4 text-xl">{toHumanReadableStorageSize(tableData.size)}</td>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                                {tableData.children.map((entry, index) => (
+                                    <tr
+                                        key={index + 1}
+                                        onMouseOver={(e) => {
+                                            e.currentTarget.style.textDecoration = "underline";
+                                            entry.select()
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.currentTarget.style.textDecoration = "none";
+                                            entry.deselect()
+                                        }}
+                                        onClick={() => setCurrentRootPath([...tableData.path, entry.name])}
+                                    >
+                                        <td className="p-0">
+                                            <div
+                                                className="inline-block w-4 h-4 border border-white"
+                                                style={{ backgroundColor: entry.color }}
+                                            />
+                                        </td>
+                                        <td className="p-0">{entry.name}</td>
+                                        <td className="p-0">{toHumanReadableStorageSize(entry.size)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
         </>
