@@ -17,10 +17,12 @@ function App() {
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentPath, setCurrentPath] = useState(decodeURIComponent(window.location.pathname));
+  const [currentFragment, setCurrentFragment] = useState(decodeURIComponent(window.location.hash.substring(1)));
 
   useEffect(() => {
     const handlePopState = () => {
       setCurrentPath(decodeURIComponent(window.location.pathname));
+      setCurrentFragment(decodeURIComponent(window.location.hash.substring(1)));
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -29,9 +31,12 @@ function App() {
     };
   }, []);
 
-  const goToPath = (path: string) => {
-    window.history.pushState({}, '', path);
-    setCurrentPath(path);
+  const goTo = ({ path, fragment }: { path?: string; fragment?: string } = {}) => {
+    const basePath = path || window.location.pathname;
+    const fullPath = fragment ? `${basePath}#${fragment}` : basePath;
+    window.history.pushState({}, '', fullPath);
+    if (path) setCurrentPath(path);
+    if (fragment) setCurrentFragment(fragment);
   };
 
   useEffect(() => {
@@ -65,7 +70,7 @@ function App() {
       }
       setIsSignedIn(true);
 
-      goToPath("/d/My Drive");
+      goTo({ path: "/d/", fragment: "My Drive" });
       await walkDrive((folder: Folder) => setData(folder));
       setIsStartButtonDisabled(false);
     }
@@ -91,8 +96,8 @@ function App() {
         <>
           <ProgressBar enabled={isSignedIn} />
           <ZoomableIcicle
-            currentRootPath={currentPath.replace(/^\/d\//, "").split("/").filter(Boolean)}
-            setCurrentRootPath={(path: string[]) => goToPath(`/d/${path.join("/")}`)}
+            currentRootPath={currentFragment.split("/").filter(Boolean)}
+            setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
           />
         </>
       ) : (
