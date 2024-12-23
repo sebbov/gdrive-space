@@ -72,8 +72,8 @@ const ZoomableIcicle: React.FC = () => {
     const svgRef = useRef<SVGSVGElement | null>(null);
 
     const rootNodeColor = '#f0f0f0';
-    const [currentRootPath, setCurrentRootPath] = useState(["root"]);
-    const [tableData, setTableData] = useState<tableData>({ path: ["root"], size: 0, color: rootNodeColor, children: [] });
+    const [currentRootPath, setCurrentRootPath] = useState(["My Drive"]);
+    const [tableData, setTableData] = useState<tableData>({ path: ["My Drive"], size: 0, color: rootNodeColor, children: [] });
 
     useEffect(() => {
         const data = toIcicleData(driveData);

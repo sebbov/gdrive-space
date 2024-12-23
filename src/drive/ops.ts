@@ -10,7 +10,7 @@ export const walkDrive = async (
     const pageSize = 1000;
 
     const queue = new PQueue({ concurrency: concurrency });
-    const rootFolder: Folder = { name: 'root', size: 0, subfolders: [] };
+    const rootFolder: Folder = { name: 'My Drive', size: 0, subfolders: [] };
 
     // Throttle state updates.  These trigger potentially expensive rendering. Garbage
     // collection has been observed not to keep up with the rate of memory allocations,

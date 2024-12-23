@@ -7,7 +7,7 @@ interface DriveDataContextType {
 }
 
 const initialRoot: Folder = {
-    name: "root",
+    name: "My Drive",
     subfolders: [],
     size: 0,
 };

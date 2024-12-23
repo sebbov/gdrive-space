@@ -2,13 +2,13 @@ import { Folder } from './defs.ts';
 
 export const devData: { [key: string]: Folder } = {
     '0': {
-        name: "root",
+        name: "My Drive",
         size: 0,
         subfolders: [],
     },
 
     '1': {
-        name: "root",
+        name: "My Drive",
         size: 10,
         subfolders: [
             {
@@ -36,7 +36,7 @@ export const devData: { [key: string]: Folder } = {
     },
 
     '2': {
-        name: "root",
+        name: "My Drive",
         size: 10,
         subfolders: [
             {
@@ -140,7 +140,7 @@ export const devData: { [key: string]: Folder } = {
     },
 
     '3': {
-        name: "root",
+        name: "My Drive",
         size: 10,
         subfolders: [
             {
