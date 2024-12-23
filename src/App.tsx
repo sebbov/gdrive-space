@@ -65,8 +65,8 @@ function App() {
       }
       setIsSignedIn(true);
 
+      goToPath("/d/My Drive");
       await walkDrive((folder: Folder) => setData(folder));
-
       setIsStartButtonDisabled(false);
     }
     gapi.load('client:auth2', initClient);
@@ -87,11 +87,17 @@ function App() {
         </button>
       </div>
 
-      <ProgressBar enabled={isSignedIn} />
-      <ZoomableIcicle
-        currentRootPath={currentPath.replace(/^\/d\//, "").split("/").filter(Boolean)}
-        setCurrentRootPath={(path: string[]) => goToPath(`/d/${path.join("/")}`)}
-      />
+      {currentPath.startsWith("/d/") ? (
+        <>
+          <ProgressBar enabled={isSignedIn} />
+          <ZoomableIcicle
+            currentRootPath={currentPath.replace(/^\/d\//, "").split("/").filter(Boolean)}
+            setCurrentRootPath={(path: string[]) => goToPath(`/d/${path.join("/")}`)}
+          />
+        </>
+      ) : (
+        <h1>Start page...</h1>
+      )}
     </>
   );
 }
