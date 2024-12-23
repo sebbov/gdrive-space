@@ -16,6 +16,23 @@ function App() {
   const setData = useSetDriveData();
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [currentPath, setCurrentPath] = useState(decodeURIComponent(window.location.pathname));
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(decodeURIComponent(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  const goToPath = (path: string) => {
+    window.history.pushState({}, '', path);
+    setCurrentPath(path);
+  };
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -71,7 +88,10 @@ function App() {
       </div>
 
       <ProgressBar enabled={isSignedIn} />
-      <ZoomableIcicle />
+      <ZoomableIcicle
+        currentRootPath={currentPath.replace(/^\/d\//, "").split("/").filter(Boolean)}
+        setCurrentRootPath={(path: string[]) => goToPath(`/d/${path.join("/")}`)}
+      />
     </>
   );
 }

@@ -4,10 +4,13 @@ import react from '@vitejs/plugin-react'
 export default {
     plugins: [
         checker({
-	    typescript: {
-		tsconfigPath: "tsconfig.app.json"
-	    }
-	}),
-	react(),
+            typescript: {
+                tsconfigPath: "tsconfig.app.json"
+            }
+        }),
+        react(),
     ],
+    server: {
+        historyApiFallback: true,
+    },
 };

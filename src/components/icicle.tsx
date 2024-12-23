@@ -4,6 +4,12 @@ import { useDriveData } from './drivedata.tsx';
 import { Folder } from '../drive/defs.ts';
 import Path from './path.tsx';
 
+
+interface ZoomableIcicleProps {
+    currentRootPath: string[];
+    setCurrentRootPath: (path: string[]) => void;
+}
+
 interface tableData {
     color: string;
     path: string[];
@@ -67,12 +73,11 @@ const getColorMap = (root: d3.HierarchyNode<IcicleData>): Record<string, string>
 }
 
 
-const ZoomableIcicle: React.FC = () => {
+const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCurrentRootPath }) => {
     const driveData = useDriveData();
     const svgRef = useRef<SVGSVGElement | null>(null);
 
     const rootNodeColor = '#f0f0f0';
-    const [currentRootPath, setCurrentRootPath] = useState(["My Drive"]);
     const [tableData, setTableData] = useState<tableData>({ path: ["My Drive"], size: 0, color: rootNodeColor, children: [] });
 
     useEffect(() => {
