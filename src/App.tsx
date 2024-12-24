@@ -16,6 +16,7 @@ function App() {
   const driveData = useDriveData();
   const setDriveData = useSetDriveData();
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
+  const [driveWalkCompleted, setDriveWalkCompleted] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentPath, setCurrentPath] = useState(decodeURIComponent(window.location.pathname));
   const [currentFragment, setCurrentFragment] = useState(decodeURIComponent(window.location.hash.substring(1)));
@@ -63,6 +64,7 @@ function App() {
 
   const handleStart = async () => {
     setIsStartButtonDisabled(true);
+    setDriveWalkCompleted(false);
 
     const initClient = async () => {
       await gapi.client.init({
@@ -79,6 +81,7 @@ function App() {
 
       goTo({ path: "/d/", fragment: "My Drive" });
       await walkDrive((folder: Folder) => setDriveData(folder));
+      setDriveWalkCompleted(true);
       setIsStartButtonDisabled(false);
     }
     gapi.load('client:auth2', initClient);
@@ -100,7 +103,7 @@ function App() {
 
       {currentPath.startsWith("/d/") ? (
         <>
-          <ProgressBar enabled={isSignedIn} />
+          <ProgressBar enabled={isSignedIn} completed={driveWalkCompleted} />
           <ZoomableIcicle
             currentRootPath={currentFragment.split("/").filter(Boolean)}
             setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}

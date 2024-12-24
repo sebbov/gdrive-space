@@ -4,12 +4,13 @@ import { Folder } from '../drive/defs.ts';
 
 interface ProgressBarProps {
     enabled: boolean;
+    completed: boolean;
 }
 
 // An upper limit for Drive storage for the lifetime of this app.
 const hellaByte = 2 ** 90;
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ enabled }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ enabled, completed }) => {
     const [totalSize, setTotalSize] = useState<number | undefined>(undefined);
 
     useEffect(() => {
@@ -31,22 +32,22 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ enabled }) => {
         getTotalSize();
     }, [enabled])
 
-    let percentage = undefined;
-    const data = useDriveData();
-    const calculateTotalSize = (folder: Folder | undefined): number => {
-        if (!folder) return 0;
-        let totalSize = folder.size;
-        for (const subfolder of folder.subfolders) {
-            totalSize += calculateTotalSize(subfolder);
+    let percentage = 100;
+    if (!completed) {
+        const data = useDriveData();
+        const calculateTotalSize = (folder: Folder | undefined): number => {
+            if (!folder) return 0;
+            let totalSize = folder.size;
+            for (const subfolder of folder.subfolders) {
+                totalSize += calculateTotalSize(subfolder);
+            }
+            return totalSize;
         }
-        return totalSize;
-    }
-
-    if (totalSize !== undefined) {
-        // NB: Multi-parent and other corner cases in how total Drive storage is calculated
-        // by the Drive service may make this > 100.  Experience will tell if this requires
-        // adjustments (e.g. making this account for 95% and keep the remaining 5% time-based).
-        percentage = Math.round(100.0 * calculateTotalSize(data) / totalSize);
+        if (totalSize !== undefined) {
+            // Clamp at 99 until we know the Drive walk completed. A 100% progress would
+            // be surprising before that point.
+            percentage = Math.min(99, Math.round(100.0 * calculateTotalSize(data) / totalSize));
+        }
     }
 
     return (
