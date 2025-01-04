@@ -9,6 +9,7 @@ export default {
       colors: {
         'logo-gdrive-yellow': '#f3d9a8',
         'logo-space-blue': '#65c3cd',
+        'logo-space-blue-darker': '#55b3bd',
       },
       textColor: {
         white: '#ffffff',

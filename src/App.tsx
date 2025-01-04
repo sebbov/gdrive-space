@@ -35,7 +35,8 @@ function App() {
 
   const goTo = ({ path, fragment }: { path?: string; fragment?: string } = {}) => {
     const basePath = path || window.location.pathname;
-    const fullPath = fragment ? `${basePath}#${fragment}` : basePath;
+    const currentFragment = fragment || window.location.hash.slice(1);
+    const fullPath = currentFragment ? `${basePath}#${currentFragment}` : basePath;
     window.history.pushState({}, '', fullPath);
     if (path) setCurrentPath(path);
     if (fragment) setCurrentFragment(fragment);
@@ -90,6 +91,7 @@ function App() {
   return (
     <>
       <div
+        className="p-4 gap-4"
         style={{
           backgroundImage: "url('/assets/starfield.jpg')",
           backgroundRepeat: "repeat",
@@ -97,18 +99,58 @@ function App() {
           minHeight: "100vh",
         }}
       >
-        <div className="flex items-center p-2 cursor-pointer" onClick={() => goTo({ path: "/" })}>
-          <img src="/assets/gdrive.png" width="10%" height="10%" />
-          <img src="/assets/space.png" width="10%" height="10%" />
+        <div className="flex items-center justify-between p-2">
+          <div className="flex items-center cursor-pointer" onClick={() => isStartButtonDisabled ? goTo({ path: "/d/" }) : goTo({ path: "/" })}>
+            <img src="/assets/gdrive.png" alt="GDrive Logo" className="w-auto h-8" />
+            <img src="/assets/space.png" alt="Space Logo" className="w-auto h-8" />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <span
+              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
+              title="Help"
+              onClick={() => goTo({ path: "/info" })}
+            >
+              help
+            </span>
+
+            <span
+              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
+              title="Privacy Policy"
+              onClick={() => goTo({ path: "/privacy" })}
+            >
+              privacy_tip
+            </span>
+
+            <span
+              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
+              title="Log out Google Drive"
+              onClick={() => console.log("Log out clicked")}
+            >
+              logout
+            </span>
+          </div>
         </div>
 
+        <div
+          className="cursor-pointer"
+          onClick={() => isStartButtonDisabled ? goTo({ path: "/d/" }) : goTo({ path: "/" })}
+        >
+          <ProgressBar enabled={isSignedIn} completed={driveWalkCompleted} />
+        </div>
         {currentPath == "/d/" ? (
           <>
-            <ProgressBar enabled={isSignedIn} completed={driveWalkCompleted} />
             <ZoomableIcicle
               currentRootPath={currentFragment.split("/").filter(Boolean)}
               setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
             />
+          </>
+        ) : currentPath == "/info" ? (
+          <>
+            <h1>Info</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
           </>
         ) : currentPath == "/privacy" ? (
           <>
@@ -121,17 +163,11 @@ function App() {
           <button
             onClick={handleStart}
             disabled={isStartButtonDisabled}
-            className={`px-4 py-2 text-white font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
+            className={`px-4 py-2 text-logo-gdrive-yellow font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-logo-space-blue hover:bg-logo-space-blue-darker'}`}
           >
             {isStartButtonDisabled ? 'Running...' : 'Start'}
           </button>
         )}
-
-        <div className="flex-grow-1"></div>
-        <footer className="p-2 flex flex-row justify-content-between gap-14 w-full text-center">
-          <a className="w-1/2" href="https://github.com/sebbov/gdrive-space">Github</a>
-          <a className="w-1/2" href="/privacy">Privacy Policy</a>
-        </footer>
 
       </div>
     </>
