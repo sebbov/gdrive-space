@@ -22,6 +22,16 @@ function App() {
   const [currentFragment, setCurrentFragment] = useState(decodeURIComponent(window.location.hash.substring(1)));
 
   useEffect(() => {
+    gapi.load('client:auth2', async () => {
+      await gapi.client.init({
+        clientId: CLIENT_ID,
+        scope: SCOPES,
+        discoveryDocs: [DISCOVERY_DOC],
+      });
+      const auth2 = gapi.auth2.getAuthInstance();
+      setIsSignedIn(auth2.isSignedIn.get());
+    });
+
     const handlePopState = () => {
       setCurrentPath(decodeURIComponent(window.location.pathname));
       setCurrentFragment(decodeURIComponent(window.location.hash.substring(1)));
@@ -68,26 +78,25 @@ function App() {
       goTo({ path: "/d/" });
       return
     }
+
+    if (!isSignedIn) {
+      const authInstance = gapi.auth2.getAuthInstance();
+      await authInstance.signIn();
+    }
+    setIsSignedIn(true);
     setDriveWalkStarted(true);
 
-    const initClient = async () => {
-      await gapi.client.init({
-        clientId: CLIENT_ID,
-        scope: SCOPES,
-        discoveryDocs: [DISCOVERY_DOC],
-      });
+    goTo({ path: "/d/", fragment: "My Drive" });
+    await walkDrive((folder: Folder) => setDriveData(folder));
 
-      const authInstance = gapi.auth2.getAuthInstance();
-      if (!authInstance.isSignedIn.get()) {
-        await authInstance.signIn();
-      }
-      setIsSignedIn(true);
+    setDriveWalkCompleted(true);
+  };
 
-      goTo({ path: "/d/", fragment: "My Drive" });
-      await walkDrive((folder: Folder) => setDriveData(folder));
-      setDriveWalkCompleted(true);
-    }
-    gapi.load('client:auth2', initClient);
+  const handleLogout = async () => {
+    const auth2 = gapi.auth2.getAuthInstance();
+    await auth2.signOut();
+    auth2.disconnect();
+    window.location.reload();
   };
 
   return (
@@ -124,13 +133,15 @@ function App() {
               privacy_tip
             </span>
 
-            <span
-              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
-              title="Log out Google Drive"
-              onClick={() => console.log("Log out clicked")}
-            >
-              logout
-            </span>
+            {isSignedIn && (
+              <span
+                className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
+                title="Revoke all GDrive Space access to your Google Drive"
+                onClick={handleLogout}
+              >
+                logout
+              </span>
+            )}
           </div>
         </div>
 
@@ -138,7 +149,7 @@ function App() {
           className="cursor-pointer"
           onClick={() => driveWalkStarted ? goTo({ path: "/d/" }) : goTo({ path: "/" })}
         >
-          <ProgressBar enabled={isSignedIn} completed={driveWalkCompleted} />
+          <ProgressBar enabled={driveWalkStarted} completed={driveWalkCompleted} />
         </div>
         {currentPath == "/d/" ? (
           <>
