@@ -15,7 +15,7 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 function App() {
   const driveData = useDriveData();
   const setDriveData = useSetDriveData();
-  const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
+  const [driveWalkStarted, setDriveWalkStarted] = useState(false);
   const [driveWalkCompleted, setDriveWalkCompleted] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentPath, setCurrentPath] = useState(decodeURIComponent(window.location.pathname));
@@ -64,8 +64,11 @@ function App() {
   }, [driveData]);
 
   const handleStart = async () => {
-    setIsStartButtonDisabled(true);
-    setDriveWalkCompleted(false);
+    if (driveWalkStarted) {
+      goTo({ path: "/d/" });
+      return
+    }
+    setDriveWalkStarted(true);
 
     const initClient = async () => {
       await gapi.client.init({
@@ -83,7 +86,6 @@ function App() {
       goTo({ path: "/d/", fragment: "My Drive" });
       await walkDrive((folder: Folder) => setDriveData(folder));
       setDriveWalkCompleted(true);
-      setIsStartButtonDisabled(false);
     }
     gapi.load('client:auth2', initClient);
   };
@@ -100,7 +102,7 @@ function App() {
         }}
       >
         <div className="flex items-center justify-between p-2">
-          <div className="flex items-center cursor-pointer" onClick={() => isStartButtonDisabled ? goTo({ path: "/d/" }) : goTo({ path: "/" })}>
+          <div className="flex items-center cursor-pointer" onClick={() => driveWalkStarted ? goTo({ path: "/d/" }) : goTo({ path: "/" })}>
             <img src="/assets/gdrive.png" alt="GDrive Logo" className="w-auto h-8" />
             <img src="/assets/space.png" alt="Space Logo" className="w-auto h-8" />
           </div>
@@ -134,7 +136,7 @@ function App() {
 
         <div
           className="cursor-pointer"
-          onClick={() => isStartButtonDisabled ? goTo({ path: "/d/" }) : goTo({ path: "/" })}
+          onClick={() => driveWalkStarted ? goTo({ path: "/d/" }) : goTo({ path: "/" })}
         >
           <ProgressBar enabled={isSignedIn} completed={driveWalkCompleted} />
         </div>
@@ -162,10 +164,9 @@ function App() {
         ) : (
           <button
             onClick={handleStart}
-            disabled={isStartButtonDisabled}
-            className={`px-4 py-2 text-logo-gdrive-yellow font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-logo-space-blue hover:bg-logo-space-blue-darker'}`}
+            className="px-4 py-2 text-logo-gdrive-yellow font-bold rounded bg-logo-space-blue hover:bg-logo-space-blue-darker"
           >
-            {isStartButtonDisabled ? 'Running...' : 'Start'}
+            {driveWalkStarted ? 'Results' : 'Start'}
           </button>
         )}
 
