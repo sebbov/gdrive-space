@@ -57,7 +57,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!driveData) {
+    if (!driveData && currentPath == "/d/") {
       goTo({ path: "/" });
     }
   }, [driveData]);
@@ -88,37 +88,53 @@ function App() {
   };
 
   return (
-    <div
-      style={{
-        backgroundImage: "url('/assets/starfield.jpg')",
-        backgroundRepeat: "repeat",
-        backgroundSize: "auto",
-        minHeight: "100vh",
-      }}
-    >
-      <div className="flex items-center p-2 cursor-pointer" onClick={() => goTo({ path: "/" })}>
-        <img src="/assets/gdrive.png" width="10%" height="10%" />
-        <img src="/assets/space.png" width="10%" height="10%" />
-      </div>
+    <>
+      <div
+        style={{
+          backgroundImage: "url('/assets/starfield.jpg')",
+          backgroundRepeat: "repeat",
+          backgroundSize: "auto",
+          minHeight: "100vh",
+        }}
+      >
+        <div className="flex items-center p-2 cursor-pointer" onClick={() => goTo({ path: "/" })}>
+          <img src="/assets/gdrive.png" width="10%" height="10%" />
+          <img src="/assets/space.png" width="10%" height="10%" />
+        </div>
 
-      {currentPath.startsWith("/d/") ? (
-        <>
-          <ProgressBar enabled={isSignedIn} completed={driveWalkCompleted} />
-          <ZoomableIcicle
-            currentRootPath={currentFragment.split("/").filter(Boolean)}
-            setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
-          />
-        </>
-      ) : (
-        <button
-          onClick={handleStart}
-          disabled={isStartButtonDisabled}
-          className={`px-4 py-2 text-white font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
-        >
-          {isStartButtonDisabled ? 'Running...' : 'Start'}
-        </button>
-      )}
-    </div>
+        {currentPath == "/d/" ? (
+          <>
+            <ProgressBar enabled={isSignedIn} completed={driveWalkCompleted} />
+            <ZoomableIcicle
+              currentRootPath={currentFragment.split("/").filter(Boolean)}
+              setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
+            />
+          </>
+        ) : currentPath == "/privacy" ? (
+          <>
+            <h1>Privacy</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </>
+        ) : (
+          <button
+            onClick={handleStart}
+            disabled={isStartButtonDisabled}
+            className={`px-4 py-2 text-white font-bold rounded ${isStartButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}
+          >
+            {isStartButtonDisabled ? 'Running...' : 'Start'}
+          </button>
+        )}
+
+        <div className="flex-grow-1"></div>
+        <footer className="p-2 flex flex-row justify-content-between gap-14 w-full text-center">
+          <a className="w-1/2" href="https://github.com/sebbov/gdrive-space">Github</a>
+          <a className="w-1/2" href="/privacy">Privacy Policy</a>
+        </footer>
+
+      </div>
+    </>
   );
 }
 
