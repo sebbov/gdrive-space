@@ -186,6 +186,9 @@ function App() {
             </button>
           </div>
         )}
+        <footer className="text-center text-gray-500 text-sm mt-6">
+          © 2024–{new Date().getFullYear()} Unimplemented LLC. All rights reserved.
+        </footer>
       </div>
     </>
   );
