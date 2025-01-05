@@ -184,7 +184,7 @@ function App() {
               className="rounded-lg border-2 border-gray-300 w-3/4 shadow-lg"
             />
             <p className="text-gray-300 text-2xl">
-              Read our <a href="#" onClick={() => goTo({ path: "/faq" })} className="underline">FAQ</a>, our <a href="#" onClick={() => goTo({ path: "/privacy" })} className="underline">Privacy Policy</a> and our <a href="#" onClick={() => goTo({ path: "/tos" })} className="underline">Terms of Use</a>.
+              Read our <a href="/faq" className="underline">FAQ</a>, our <a href="/privacy" className="underline">Privacy Policy</a> and our <a href="/tos" className="underline">Terms of Use</a>.
             </p>
             <button
               onClick={handleStart}
