@@ -24,7 +24,7 @@ const FAQ = ({ goTo }: { goTo: (options: { path?: string; fragment?: string }) =
                         Connect to Google Drive: Authorize GDrive Space to access your Google Drive account.
                     </li>
                     <li className="text-gray-300 mb-1">
-                        GDrive Space will then start a scan of all files in your Drive. This process may take a few minutes, especially for large drives.
+                        GDrive Space will then start a scan of all file information in your Drive. This process may take a few minutes, especially for large drives.
                     </li>
                     <li className="text-gray-300 mb-1">
                         Explore your folders and visualize how your storage space is being used.
@@ -59,7 +59,7 @@ const FAQ = ({ goTo }: { goTo: (options: { path?: string; fragment?: string }) =
             <div>
                 <h3 className="text-xl font-semibold text-white mb-1">I'd like GDrive Space to do something it doesn't currently support.</h3>
                 <p className="text-gray-300 mb-4">
-                    We're always looking for ways to improve GDrive Space. If you have a feature request or suggestion, please contact us at <a href="mailto:info@gdrive.space" className="text-blue-400 underline">info@gdrive.space</a>. We appreciate your feedback!
+                    If you have a feature request or suggestion, please contact us at <a href="mailto:info@gdrive.space" className="text-blue-400 underline">info@gdrive.space</a>. We appreciate your feedback!
                 </p>
             </div>
             <div>

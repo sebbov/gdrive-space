@@ -6,7 +6,7 @@ const PrivacyPolicy = () => (
             This Privacy Policy explains how GDrive Space collects, uses, and discloses information about you when you use our web application.
             GDrive Space itself does not collect any personal information about you or your Google Drive files.
 
-            Standard web servers, including the one used to host this application, automatically collect certain information from visitors.
+            Standard web servers, including the one used to host this app, automatically collect certain information from visitors.
             This is a common practice for any website and helps us understand how our website is being used and ensure its proper functioning.
         </p>
 
@@ -14,7 +14,7 @@ const PrivacyPolicy = () => (
         <p className="text-gray-300 mb-4">
             These server logs may include your IP address, browser type, referring/exit pages, and platform.
 
-            <span className="font-bold text-white m-1">This log data does not include any personal information about you, such as your name, email address, any information related to your Google Drive files, or clicks within the GDrive Space application.</span>
+            <span className="font-bold text-white m-1">This log data does not include any personal information about you, such as your name, email address, any information related to your Google Drive files, or activity within the GDrive Space app.</span>
 
             We use this information for website administration, troubleshooting, website analytics, and security purposes. We retain log data for 1 year.
         </p>
@@ -22,6 +22,14 @@ const PrivacyPolicy = () => (
         <h2 className="text-2xl font-semibold text-white mb-2">Data Storage and Security</h2>
         <p className="text-gray-300 mb-4">
             <span className="font-bold text-white">Client-Side Only:</span> All data processing and storage related to your Google Drive interaction occur entirely within your web browser.
+        </p>
+
+        <p className="text-gray-300 mb-4">
+            <span className="font-bold text-white">Read-Only:</span> GDrive Space has no access to make changes to your Google Drive whatsoever.
+        </p>
+
+        <p className="text-gray-300 mb-4">
+            <span className="font-bold text-white">Metadata Only:</span> No Google Drive file contents are ever read. Only names, types and storage sizes of files are read.
         </p>
 
         <p className="text-gray-300 mb-4">
