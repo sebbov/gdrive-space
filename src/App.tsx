@@ -169,14 +169,23 @@ function App() {
             <PrivacyPolicy />
           </>
         ) : (
-          <button
-            onClick={handleStart}
-            className="px-4 py-2 text-logo-gdrive-yellow font-bold rounded bg-logo-space-blue hover:bg-logo-space-blue-darker"
-          >
-            {driveWalkStarted ? 'Results' : 'Start'}
-          </button>
+          <div className="flex flex-col justify-evenly items-center text-center min-h-[calc(100vh-4rem)] w-3/4 py-6 mx-auto">
+            <p className="text-gray-300 text-3xl">
+              Explore your Google Drive folders and gain insights into your storage usage directly within your browser.
+            </p>
+            <p className="text-gray-300 text-3xl">
+              <span className="whitespace-nowrap">
+                Read our <a href="#" onClick={() => goTo({ path: "/faq" })} className="underline">FAQ</a> and our <a href="#" onClick={() => goTo({ path: "/privacy" })} className="underline">Privacy Policy</a>.
+              </span>
+            </p>
+            <button
+              onClick={handleStart}
+              className="px-10 py-5 text-2xl text-logo-gdrive-yellow font-bold rounded bg-logo-space-blue hover:bg-logo-space-blue-dark transition-all duration-200"
+            >
+              {driveWalkStarted ? 'Results' : 'Start'}
+            </button>
+          </div>
         )}
-
       </div>
     </>
   );
