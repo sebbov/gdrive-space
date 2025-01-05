@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDriveData, useSetDriveData } from './components/drivedata.tsx';
 import FAQ from './components/faq.tsx';
 import PrivacyPolicy from './components/privacy.tsx';
+import TermsOfUse from './components/tos.tsx';
 import ZoomableIcicle from './components/icicle.tsx';
 import { walkDrive } from './drive/ops.ts';
 import { Folder } from './drive/defs.ts';
@@ -168,6 +169,10 @@ function App() {
           <>
             <PrivacyPolicy />
           </>
+        ) : currentPath == "/tos" ? (
+          <>
+            <TermsOfUse />
+          </>
         ) : (
           <div className="flex flex-col justify-evenly items-center text-center min-h-[calc(100vh-4rem)] w-3/4 py-6 mx-auto">
             <p className="text-gray-300 text-3xl">
@@ -175,7 +180,7 @@ function App() {
             </p>
             <p className="text-gray-300 text-3xl">
               <span className="whitespace-nowrap">
-                Read our <a href="#" onClick={() => goTo({ path: "/faq" })} className="underline">FAQ</a> and our <a href="#" onClick={() => goTo({ path: "/privacy" })} className="underline">Privacy Policy</a>.
+                Read our <a href="#" onClick={() => goTo({ path: "/faq" })} className="underline">FAQ</a>, our <a href="#" onClick={() => goTo({ path: "/privacy" })} className="underline">Privacy Policy</a> and our <a href="#" onClick={() => goTo({ path: "/tos" })} className="underline">Terms of Use</a>.
               </span>
             </p>
             <button
