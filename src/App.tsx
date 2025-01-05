@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDriveData, useSetDriveData } from './components/drivedata.tsx';
+import PrivacyPolicy from './components/privacy.tsx';
 import ZoomableIcicle from './components/icicle.tsx';
 import { walkDrive } from './drive/ops.ts';
 import { Folder } from './drive/defs.ts';
@@ -119,7 +120,7 @@ function App() {
           <div className="flex items-center gap-4">
             <span
               className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
-              title="Help"
+              title="More Information"
               onClick={() => goTo({ path: "/info" })}
             >
               help
@@ -136,7 +137,7 @@ function App() {
             {isSignedIn && (
               <span
                 className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
-                title="Revoke all GDrive Space access to your Google Drive"
+                title="Revoke all access you provided this app to your Google Drive"
                 onClick={handleLogout}
               >
                 logout
@@ -167,10 +168,7 @@ function App() {
           </>
         ) : currentPath == "/privacy" ? (
           <>
-            <h1>Privacy</h1>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
+            <PrivacyPolicy />
           </>
         ) : (
           <button
