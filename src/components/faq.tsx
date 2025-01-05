@@ -59,7 +59,8 @@ const FAQ = ({ goTo }: { goTo: (options: { path?: string; fragment?: string }) =
             <div>
                 <h3 className="text-xl font-semibold text-white mb-1">I'd like GDrive Space to do something it doesn't currently support.</h3>
                 <p className="text-gray-300 mb-4">
-                    If you have a feature request or suggestion, please contact us at <a href="mailto:info@gdrive.space" className="text-blue-400 underline">info@gdrive.space</a>. We appreciate your feedback!
+                    If you have a feature request or suggestion, please contact us at <a href="mailto:info@gdrive.space" className="text-blue-400 underline">info@gdrive.space</a>. However, we will not be expanding the range of data GDrive Space reads from your Drive (i.e., more than just metadata) or where that data is handled (i.e., more than just in browser memory).  This is because we prioritize careful security practices to ensure your data is always protected.
+
                 </p>
             </div>
             <div>
