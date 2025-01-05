@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDriveData, useSetDriveData } from './components/drivedata.tsx';
+import FAQ from './components/faq.tsx';
 import PrivacyPolicy from './components/privacy.tsx';
 import ZoomableIcicle from './components/icicle.tsx';
 import { walkDrive } from './drive/ops.ts';
@@ -120,8 +121,8 @@ function App() {
           <div className="flex items-center gap-4">
             <span
               className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
-              title="More Information"
-              onClick={() => goTo({ path: "/info" })}
+              title="Frequently Asked Questions"
+              onClick={() => goTo({ path: "/faq" })}
             >
               help
             </span>
@@ -159,12 +160,9 @@ function App() {
               setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
             />
           </>
-        ) : currentPath == "/info" ? (
+        ) : currentPath == "/faq" ? (
           <>
-            <h1>Info</h1>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
+            <FAQ goTo={goTo} />
           </>
         ) : currentPath == "/privacy" ? (
           <>
