@@ -174,20 +174,26 @@ function App() {
             <TermsOfUse />
           </>
         ) : (
-          <div className="flex flex-col justify-evenly items-center text-center min-h-[calc(100vh-4rem)] w-3/4 py-6 mx-auto">
+
+          <div className="flex flex-col justify-evenly items-center text-center min-h-[calc(100vh-4rem)] w-3/4 py-2 mx-auto">
             <p className="text-gray-300 text-3xl">
               Explore your Google Drive folders and gain insights into your storage usage directly within your browser.
             </p>
-            <p className="text-gray-300 text-3xl">
+            <img
+              src="/assets/screenshot.png"
+              className="rounded-lg border-2 border-gray-300 w-3/4 shadow-lg"
+            />
+            <p className="text-gray-300 text-2xl">
               Read our <a href="#" onClick={() => goTo({ path: "/faq" })} className="underline">FAQ</a>, our <a href="#" onClick={() => goTo({ path: "/privacy" })} className="underline">Privacy Policy</a> and our <a href="#" onClick={() => goTo({ path: "/tos" })} className="underline">Terms of Use</a>.
             </p>
             <button
               onClick={handleStart}
-              className="px-40 py-10 text-5xl text-white font-bold rounded bg-logo-space-blue-darker hover:bg-logo-space-blue transition-all duration-200"
+              className="px-14 py-5 text-4xl text-white font-bold rounded-full bg-logo-space-blue-darker hover:bg-logo-space-blue-darkest shadow-xl"
             >
               {driveWalkStarted ? 'Results' : 'Start'}
             </button>
           </div>
+
         )}
         <footer className="text-center text-gray-500 text-sm mt-6">
           © 2024–{new Date().getFullYear()} Unimplemented LLC. All rights reserved.
