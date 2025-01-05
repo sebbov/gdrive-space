@@ -179,13 +179,11 @@ function App() {
               Explore your Google Drive folders and gain insights into your storage usage directly within your browser.
             </p>
             <p className="text-gray-300 text-3xl">
-              <span className="whitespace-nowrap">
-                Read our <a href="#" onClick={() => goTo({ path: "/faq" })} className="underline">FAQ</a>, our <a href="#" onClick={() => goTo({ path: "/privacy" })} className="underline">Privacy Policy</a> and our <a href="#" onClick={() => goTo({ path: "/tos" })} className="underline">Terms of Use</a>.
-              </span>
+              Read our <a href="#" onClick={() => goTo({ path: "/faq" })} className="underline">FAQ</a>, our <a href="#" onClick={() => goTo({ path: "/privacy" })} className="underline">Privacy Policy</a> and our <a href="#" onClick={() => goTo({ path: "/tos" })} className="underline">Terms of Use</a>.
             </p>
             <button
               onClick={handleStart}
-              className="px-10 py-5 text-2xl text-logo-gdrive-yellow font-bold rounded bg-logo-space-blue hover:bg-logo-space-blue-dark transition-all duration-200"
+              className="px-40 py-10 text-5xl text-white font-bold rounded bg-logo-space-blue-darker hover:bg-logo-space-blue transition-all duration-200"
             >
               {driveWalkStarted ? 'Results' : 'Start'}
             </button>
