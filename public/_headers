@@ -1,0 +1,2 @@
+/*
+  Content-Security-Policy: script-src 'self' https://www.gstatic.com https://apis.google.com 'unsafe-inline' 'unsafe-eval' blob: data:;
