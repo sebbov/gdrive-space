@@ -56,18 +56,20 @@ function App() {
   };
 
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key in devData) {
-        setDriveData(devData[event.key]);
-        goTo({ path: "/d/", fragment: "My Drive" });
+    if (window.location.hostname === "localhost") {
+      const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key in devData) {
+          setDriveData(devData[event.key]);
+          goTo({ path: "/d/", fragment: "My Drive" });
+        }
       }
+
+      window.addEventListener('keydown', handleKeyPress);
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyPress);
+      };
     }
-
-    window.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
   }, []);
 
   useEffect(() => {
