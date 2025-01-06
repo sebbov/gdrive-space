@@ -115,13 +115,13 @@ function App() {
       >
         <div className="flex items-center justify-between p-2">
           <div className="flex items-center cursor-pointer" onClick={() => driveWalkStarted ? goTo({ path: "/d/" }) : goTo({ path: "/" })}>
-            <img src="/assets/gdrive.png" alt="GDrive Logo" className="w-auto h-8" />
-            <img src="/assets/space.png" alt="Space Logo" className="w-auto h-8" />
+            <img src="/assets/gdrive.png" alt="GDrive Logo" className="w-auto h-4 sm:h-6 md:h-8" />
+            <img src="/assets/space.png" alt="Space Logo" className="w-auto h-4 sm:h-6 md:h-8" />
           </div>
 
           <div className="flex items-center gap-4">
             <span
-              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
+              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-2xl sm:text-4xl md:text-5xl"
               title="Frequently Asked Questions"
               onClick={() => goTo({ path: "/faq" })}
             >
@@ -129,7 +129,7 @@ function App() {
             </span>
 
             <span
-              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
+              className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-2xl sm:text-4xl md:text-5xl"
               title="Privacy Policy"
               onClick={() => goTo({ path: "/privacy" })}
             >
@@ -138,7 +138,7 @@ function App() {
 
             {isSignedIn && (
               <span
-                className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-5xl"
+                className="material-icons-outlined text-logo-space-blue hover:text-logo-gdrive-yellow cursor-pointer text-2xl sm:text-4xl md:text-5xl"
                 title="Revoke all access you provided this app to your Google Drive"
                 onClick={handleLogout}
               >
