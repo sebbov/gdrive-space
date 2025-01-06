@@ -157,24 +157,16 @@ function App() {
           <ProgressBar enabled={driveWalkStarted} completed={driveWalkCompleted} />
         </div>
         {currentPath == "/d/" ? (
-          <>
-            <Stats
-              currentRootPath={currentFragment.split("/").filter(Boolean)}
-              setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
-            />
-          </>
+          <Stats
+            currentRootPath={currentFragment.split("/").filter(Boolean)}
+            setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
+          />
         ) : currentPath == "/faq" ? (
-          <>
-            <FAQ goTo={goTo} />
-          </>
+          <FAQ goTo={goTo} />
         ) : currentPath == "/privacy" ? (
-          <>
-            <PrivacyPolicy />
-          </>
+          <PrivacyPolicy />
         ) : currentPath == "/tos" ? (
-          <>
-            <TermsOfUse />
-          </>
+          <TermsOfUse />
         ) : (
 
           <div className="flex flex-col justify-evenly items-center text-center min-h-[calc(100vh-4rem)] w-3/4 py-2 mx-auto">
