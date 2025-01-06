@@ -4,9 +4,8 @@ import FAQ from './components/faq.tsx';
 import PrivacyPolicy from './components/privacy.tsx';
 import TermsOfUse from './components/tos.tsx';
 import Stats from './components/stats.tsx';
-import { walkDrive } from './drive/ops.ts';
-import { Folder } from './drive/defs.ts';
-import { devData } from './drive/fake.ts';
+import { walkDrive, Folder } from './drive.ts';
+import { devData } from './fake-drive-data.ts';
 import { gapi } from 'gapi-script';
 import ProgressBar from './components/progress.tsx';
 

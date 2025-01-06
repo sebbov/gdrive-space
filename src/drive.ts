@@ -1,6 +1,12 @@
 import PQueue from 'p-queue';
-import { Folder } from './defs.ts';
 import { gapi } from 'gapi-script';
+
+export interface Folder {
+    name: string;
+    fileId: string;
+    size: number;
+    subfolders: Folder[];
+}
 
 export const walkDrive = async (
     setData: (folder: Folder) => void,

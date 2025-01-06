@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDriveData } from './drivedata.tsx';
-import { Folder } from '../drive/defs.ts';
+import { Folder } from '../drive.ts';
 
 interface ProgressBarProps {
     enabled: boolean;

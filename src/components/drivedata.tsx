@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Folder } from '../drive/defs.ts';
+import { Folder } from '../drive.ts';
 
 interface DriveDataContextType {
     data: Folder | undefined;

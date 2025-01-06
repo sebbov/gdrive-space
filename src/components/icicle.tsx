@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useDriveData } from './drivedata.tsx';
-import { Folder } from '../drive/defs.ts';
+import { Folder } from '../drive.ts';
 import { TableData } from './table.tsx';
 import { toHumanReadableStorageSize } from '../util.ts';
 

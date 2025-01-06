@@ -1,4 +1,4 @@
-import { Folder } from './defs.ts';
+import { Folder } from './drive.ts';
 
 export const devData: { [key: string]: Folder } = {
     '0': {
