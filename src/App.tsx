@@ -5,7 +5,6 @@ import PrivacyPolicy from './components/privacy.tsx';
 import TermsOfUse from './components/tos.tsx';
 import Stats from './components/stats.tsx';
 import { walkDrive, Folder } from './drive.ts';
-import { devData } from './fake-drive-data.ts';
 import { gapi } from 'gapi-script';
 import ProgressBar from './components/progress.tsx';
 
@@ -55,19 +54,21 @@ function App() {
   };
 
   useEffect(() => {
-    if (window.location.hostname === "localhost") {
-      const handleKeyPress = (event: KeyboardEvent) => {
-        if (event.key in devData) {
-          setDriveData(devData[event.key]);
-          goTo({ path: "/d/", fragment: "My Drive" });
+    if (import.meta.env.VITE_APP_ENV === "dev") {
+      import("./fake-drive-data.ts").then((dataModule) => {
+        const handleKeyPress = (event: KeyboardEvent) => {
+          if (event.key in dataModule.devData) {
+            setDriveData(dataModule.devData[event.key]);
+            goTo({ path: "/d/", fragment: "My Drive" });
+          }
         }
-      }
 
-      window.addEventListener('keydown', handleKeyPress);
+        window.addEventListener('keydown', handleKeyPress);
 
-      return () => {
-        window.removeEventListener('keydown', handleKeyPress);
-      };
+        return () => {
+          window.removeEventListener('keydown', handleKeyPress);
+        };
+      });
     }
   }, []);
 
