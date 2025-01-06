@@ -3,27 +3,12 @@ import * as d3 from 'd3';
 import { useDriveData } from './drivedata.tsx';
 import { Folder } from '../drive/defs.ts';
 import Path from './path.tsx';
+import Table, { TableData } from './table.tsx';
 
 
 interface ZoomableIcicleProps {
     currentRootPath: string[];
     setCurrentRootPath: (path: string[]) => void;
-}
-
-interface tableData {
-    color: string;
-    path: string[];
-    fileId: string;
-    size: number;
-    children: tableEntry[];
-}
-interface tableEntry {
-    color: string;
-    name: string;
-    fileId?: string;
-    size: number;
-    select?: () => void;
-    deselect?: () => void;
 }
 
 interface IcicleData {
@@ -80,7 +65,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
     const driveData = useDriveData();
     const svgRef = useRef<SVGSVGElement | null>(null);
 
-    const [tableData, setTableData] = useState<tableData | undefined>(undefined);
+    const [tableData, setTableData] = useState<TableData | undefined>(undefined);
 
     useEffect(() => {
         if (!driveData) return;
@@ -130,7 +115,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
             return currentRootPath.concat(getPath(node).slice(1));
         }
 
-        const addFilesAtThisLevel = (node: d3.HierarchyNode<IcicleData>, tableData: tableData) => {
+        const addFilesAtThisLevel = (node: d3.HierarchyNode<IcicleData>, tableData: TableData) => {
             const filesSizeChild = {
                 color: "#aaa",
                 name: "[Files at this level]",
@@ -145,7 +130,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
             return tableData;
         }
 
-        const rootTableData: tableData = addFilesAtThisLevel(root, {
+        const rootTableData: TableData = addFilesAtThisLevel(root, {
             color: colorMap[JSON.stringify(getAbsPath(root))],
             path: getAbsPath(root),
             fileId: root.data.fileId,
@@ -196,7 +181,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
                 }
             })
             .on('mouseover', function(_event, d) {
-                const selectedTableData: tableData = addFilesAtThisLevel(d, {
+                const selectedTableData: TableData = addFilesAtThisLevel(d, {
                     color: colorMap[JSON.stringify(getAbsPath(d))],
                     path: getAbsPath(d),
                     fileId: d.data.fileId,
@@ -243,73 +228,11 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
             <div className="flex items-start gap-4">
                 <div className="w-1/2 overflow-auto max-h-screen">
                     {tableData && (
-                        <table className="w-full">
-                            <tbody>
-                                <tr key="0">
-                                    <td className="px-2 py-4">
-                                        {tableData.fileId && (
-                                            <a
-                                                href={`https://drive.google.com/drive/folders/${tableData.fileId}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                style={{ display: "inline-block", width: "16px", height: "16px" }}
-                                            >
-                                                <img src="/assets/drive_logo.png" width="100%" height="100%" />
-                                            </a>
-                                        )}
-                                    </td>
-                                    <td className="px-2 py-4">
-                                        <div
-                                            className="inline-block w-6 h-6"
-                                            style={{ backgroundColor: tableData.color }}
-                                        />
-                                    </td>
-                                    <td className="px-2 py-4 text-xl">{toHumanReadableStorageSize(tableData.size)}</td>
-                                    <td className="px-2 py-4 text-xl w-full">{tableData.path[tableData.path.length - 1]}</td>
-                                </tr>
-                                {tableData.children.map((entry, index) => (
-                                    <tr
-                                        key={index + 1}
-                                    >
-                                        <td className="px-2">
-                                            {entry.fileId && (
-                                                <a
-                                                    href={`https://drive.google.com/drive/folders/${entry.fileId}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-block w-4 h-4"
-                                                >
-                                                    <img src="/assets/drive_logo.png" width="100%" height="100%" />
-                                                </a>
-                                            )}
-                                        </td>
-                                        <td className="px-2">
-                                            <div
-                                                className="inline-block w-4 h-4"
-                                                style={{ backgroundColor: entry.color }}
-                                            />
-                                        </td>
-                                        <td className="px-2">{toHumanReadableStorageSize(entry.size)}</td>
-                                        <td
-                                            onMouseOver={(e) => {
-                                                if (entry.select) {
-                                                    e.currentTarget.style.textDecoration = "underline";
-                                                    entry.select()
-                                                }
-                                            }}
-                                            onMouseOut={(e) => {
-                                                e.currentTarget.style.textDecoration = "none";
-                                                entry.deselect?.()
-                                            }}
-                                            onClick={() => setCurrentRootPath([...tableData.path, entry.name])}
-                                            className="px-2 w-full cursor-pointer"
-                                        >
-                                            {entry.name}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        <Table
+                            tableData={tableData}
+                            setCurrentRootPath={setCurrentRootPath}
+                            toHumanReadableStorageSize={toHumanReadableStorageSize}
+                        />
                     )}
                 </div>
                 <svg ref={svgRef} className="w-1/2 p-2"></svg>
