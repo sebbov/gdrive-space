@@ -231,6 +231,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
             .style('font-family', 'Courier New, monospace')
             .style('font-size', (d) => Math.max(12, Math.min(32, (d.x1 - d.x0) / 4)) + 'px')
             .style('font-weight', 'bold')
+            .style('pointer-events', 'none')
             .style('fill', 'black');
     }, [currentRootPath, driveData]);
 
