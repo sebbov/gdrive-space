@@ -1,4 +1,5 @@
 import React from "react";
+import { toHumanReadableStorageSize } from '../util.ts';
 
 export interface TableEntry {
     color: string;
@@ -20,10 +21,10 @@ export interface TableData {
 interface TableProps {
     tableData: TableData;
     setCurrentRootPath: (path: string[]) => void;
-    toHumanReadableStorageSize: (n: number) => string;
 }
 
-const Table: React.FC<TableProps> = ({ tableData, setCurrentRootPath, toHumanReadableStorageSize }) => {
+
+const Table: React.FC<TableProps> = ({ tableData, setCurrentRootPath }) => {
     return (
         <table className="w-full">
             <tbody>

@@ -1,14 +1,14 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import { useDriveData } from './drivedata.tsx';
 import { Folder } from '../drive/defs.ts';
-import Path from './path.tsx';
-import Table, { TableData } from './table.tsx';
+import { TableData } from './table.tsx';
+import { toHumanReadableStorageSize } from '../util.ts';
 
-
-interface ZoomableIcicleProps {
+interface IcicleProps {
     currentRootPath: string[];
     setCurrentRootPath: (path: string[]) => void;
+    setTableData: (data: TableData | undefined) => void;
 }
 
 interface IcicleData {
@@ -18,15 +18,6 @@ interface IcicleData {
     children?: IcicleData[];
     rect?: SVGElement,
 }
-
-const toHumanReadableStorageSize = (n: number): string => (n < 1024
-    ? `${n}\u00A0Bytes`
-    : n < 1024 * 1024
-        ? `${(n / 1024).toFixed(2)}\u00A0KB`
-        : n < 1024 * 1024 * 1024
-            ? `${(n / (1024 * 1024)).toFixed(2)}\u00A0MB`
-            : `${(n / (1024 * 1024 * 1024)).toFixed(2)}\u00A0GB`
-)
 
 const toIcicleData = (folder: Folder): IcicleData => {
     return {
@@ -61,11 +52,9 @@ const getColorMap = (root: d3.HierarchyNode<IcicleData>): Record<string, string>
 }
 
 
-const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCurrentRootPath }) => {
+const Icicle: React.FC<IcicleProps> = ({ currentRootPath, setCurrentRootPath, setTableData }) => {
     const driveData = useDriveData();
     const svgRef = useRef<SVGSVGElement | null>(null);
-
-    const [tableData, setTableData] = useState<TableData | undefined>(undefined);
 
     useEffect(() => {
         if (!driveData) return;
@@ -220,25 +209,7 @@ const ZoomableIcicle: React.FC<ZoomableIcicleProps> = ({ currentRootPath, setCur
             .style('fill', 'black');
     }, [currentRootPath, driveData]);
 
-    return (
-        <>
-            <div className="w-full">
-                <Path value={currentRootPath} setCurrentRootPath={setCurrentRootPath} />
-            </div>
-            <div className="flex items-start gap-4">
-                <div className="w-1/2 overflow-auto max-h-screen">
-                    {tableData && (
-                        <Table
-                            tableData={tableData}
-                            setCurrentRootPath={setCurrentRootPath}
-                            toHumanReadableStorageSize={toHumanReadableStorageSize}
-                        />
-                    )}
-                </div>
-                <svg ref={svgRef} className="w-1/2 p-2"></svg>
-            </div>
-        </>
-    );
+    return <svg ref={svgRef} className="w-1/2 p-2"></svg>;
 };
 
-export default ZoomableIcicle;
+export default Icicle;

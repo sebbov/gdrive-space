@@ -3,7 +3,7 @@ import { useDriveData, useSetDriveData } from './components/drivedata.tsx';
 import FAQ from './components/faq.tsx';
 import PrivacyPolicy from './components/privacy.tsx';
 import TermsOfUse from './components/tos.tsx';
-import ZoomableIcicle from './components/icicle.tsx';
+import Stats from './components/stats.tsx';
 import { walkDrive } from './drive/ops.ts';
 import { Folder } from './drive/defs.ts';
 import { devData } from './drive/fake.ts';
@@ -158,7 +158,7 @@ function App() {
         </div>
         {currentPath == "/d/" ? (
           <>
-            <ZoomableIcicle
+            <Stats
               currentRootPath={currentFragment.split("/").filter(Boolean)}
               setCurrentRootPath={(path: string[]) => goTo({ fragment: path.join("/") })}
             />
