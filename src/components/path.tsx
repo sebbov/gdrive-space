@@ -7,7 +7,7 @@ interface PathProps {
 
 const Path: React.FC<PathProps> = ({ value, setCurrentRootPath }) => {
     return (
-        <div className="flex items-center whitespace-nowrap overflow-hidden w-full">
+        <div className="flex items-center whitespace-nowrap overflow-x-auto w-full">
             {value.map((component, index) => (
                 <React.Fragment key={index}>
                     {index !== 0 && (
