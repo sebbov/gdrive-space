@@ -54,7 +54,7 @@ const PrivacyPolicy = () => (
                 <span className="font-bold text-white">In this app:</span> Click on the <span className="material-icons-outlined text-sm">logout</span> button (only displayed when signed in).
             </li>
             <li className="text-gray-300 mb-1">
-                <span className="font-bold text-white">Disconnecting the app:</span> In your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="underline">Google Account settings</a>, you can revoke access to GDrive Space.
+                <span className="font-bold text-white">Disconnecting the app:</span> In your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">Google Account settings</a>, you can revoke access to GDrive Space.
             </li>
             <li className="text-gray-300">
                 <span className="font-bold text-white">Clearing your browser data:</span> Clearing your browser's cookies and cache will effectively disconnect the app.

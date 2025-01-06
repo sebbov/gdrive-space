@@ -33,6 +33,9 @@ const FAQ = ({ goTo }: { goTo: (options: { path?: string; fragment?: string }) =
                         For more detailed information about specific files or folders, click on them to view details within the Google Drive UI.
                     </li>
                     <li className="text-gray-300 mb-1">
+                        To perform another scan, simply reload the GDrive Space page and click Start.
+                    </li>
+                    <li className="text-gray-300 mb-1">
                         When you are finished exploring, revoke access to GDrive Space within the application, or in your Google Account settings.
                     </li>
                 </ul>
@@ -42,6 +45,12 @@ const FAQ = ({ goTo }: { goTo: (options: { path?: string; fragment?: string }) =
                 <p className="text-gray-300 mb-4">
                     No, GDrive Space is primarily a folder storage exploration tool.
                     For accessing files, GDrive Space links to the Google Drive UI where you can open files, trash files, etc.
+                </p>
+            </div>
+            <div>
+                <h3 className="text-xl font-semibold text-white mb-1">I cleaned up files in a folder, but my storage usage in GDrive Space hasn't changed.</h3>
+                <p className="text-gray-300 mb-4">
+                    Storage used by the folder is only released once you empty your <a href="https://drive.google.com/drive/u/0/trash" className="text-blue-400 underline">Google Drive trash</a>.
                 </p>
             </div>
             <div>
@@ -66,7 +75,7 @@ const FAQ = ({ goTo }: { goTo: (options: { path?: string; fragment?: string }) =
             <div>
                 <h3 className="text-xl font-semibold text-white mb-1">Is GDrive Space free?</h3>
                 <p className="text-gray-300 mb-4">
-                    Yes, GDrive Space is completely free to use. Enjoy! If it is useful to you and you want to thank us, a donation to keep the site up is appreciated - <a href="https://ko-fi.com/unimplementedllc" className="underline">https://ko-fi.com/unimplementedllc</a>.
+                    Yes, GDrive Space is completely free to use. Enjoy! If it is useful to you and you want to thank us, a donation to keep the site up is appreciated - <a href="https://ko-fi.com/unimplementedllc" className="text-blue-400 underline">https://ko-fi.com/unimplementedllc</a>.
                 </p>
             </div>
         </div>
