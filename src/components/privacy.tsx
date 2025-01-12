@@ -3,8 +3,8 @@ const PrivacyPolicy = () => (
         <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
 
         <p className="text-gray-300 mb-4">
-            This Privacy Policy explains how GDrive Space collects, uses, and discloses information about you when you use our web application.
-            GDrive Space itself does not collect any personal information about you or your Google Drive files.
+            This Privacy Policy explains how Galaxy Drive Space collects, uses, and discloses information about you when you use our web application.
+            Galaxy Drive Space itself does not collect any personal information about you or your Google Drive files.
 
             Standard web servers, including the one used to host this app, automatically collect certain information from visitors.
             This is a common practice for any website and helps us understand how our website is being used and ensure its proper functioning.
@@ -14,7 +14,7 @@ const PrivacyPolicy = () => (
         <p className="text-gray-300 mb-4">
             These server logs may include your IP address, browser type, referring/exit pages, and platform.
 
-            <span className="font-bold text-white m-1">This log data does not include any personal information about you, such as your name, email address, any information related to your Google Drive files, or activity within the GDrive Space app.</span>
+            <span className="font-bold text-white m-1">This log data does not include any personal information about you, such as your name, email address, any information related to your Google Drive files, or activity within the Galaxy Drive Space app.</span>
 
             We use this information for website administration, troubleshooting, website analytics, and security purposes. We retain log data for 1 year.
         </p>
@@ -25,7 +25,7 @@ const PrivacyPolicy = () => (
         </p>
 
         <p className="text-gray-300 mb-4">
-            <span className="font-bold text-white">Read-Only:</span> GDrive Space has no access to make changes to your Google Drive whatsoever.
+            <span className="font-bold text-white">Read-Only:</span> Galaxy Drive Space has no access to make changes to your Google Drive whatsoever.
         </p>
 
         <p className="text-gray-300 mb-4">
@@ -54,7 +54,7 @@ const PrivacyPolicy = () => (
                 <span className="font-bold text-white">In this app:</span> Click on the <span className="material-icons-outlined text-sm">logout</span> button (only displayed when signed in).
             </li>
             <li className="text-gray-300 mb-1">
-                <span className="font-bold text-white">Disconnecting the app:</span> In your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">Google Account settings</a>, you can revoke access to GDrive Space.
+                <span className="font-bold text-white">Disconnecting the app:</span> In your <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">Google Account settings</a>, you can revoke access to Galaxy Drive Space.
             </li>
             <li className="text-gray-300">
                 <span className="font-bold text-white">Clearing your browser data:</span> Clearing your browser's cookies and cache will effectively disconnect the app.

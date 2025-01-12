@@ -117,7 +117,7 @@ function App() {
       >
         <div className="flex items-center justify-between p-2">
           <div className="flex items-center cursor-pointer" onClick={() => driveWalkStarted ? goTo({ path: "/d/" }) : goTo({ path: "/" })}>
-            <img src="/assets/gdrive.png" alt="GDrive Logo" className="w-auto h-4 sm:h-6 md:h-8" />
+            <img src="/assets/gdrive.png" alt="Galaxy Drive Logo" className="w-auto h-4 sm:h-6 md:h-8" />
             <img src="/assets/space.png" alt="Space Logo" className="w-auto h-4 sm:h-6 md:h-8" />
           </div>
 
@@ -171,7 +171,7 @@ function App() {
 
           <div className="flex flex-col justify-evenly items-center text-center min-h-[calc(100vh-4rem)] w-3/4 py-2 mx-auto">
             <p className="text-gray-300 text-3xl">
-              Explore your Google Drive folders and gain insights into your storage usage directly within your browser.
+              Explore your Google Drive folders and gain insights into your storage usage directly within your browser, with Galaxy Drive Space!
             </p>
             <img
               src="/assets/screenshot.png"
