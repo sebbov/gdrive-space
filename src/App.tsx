@@ -117,8 +117,7 @@ function App() {
       >
         <div className="flex items-center justify-between p-2">
           <div className="flex items-center cursor-pointer" onClick={() => driveWalkStarted ? goTo({ path: "/d/" }) : goTo({ path: "/" })}>
-            <img src="/assets/gdrive.png" alt="Galaxy Drive Logo" className="w-auto h-4 sm:h-6 md:h-8" />
-            <img src="/assets/space.png" alt="Space Logo" className="w-auto h-4 sm:h-6 md:h-8" />
+            <img src="/assets/galaxy-drive-space-header.png" alt="Galaxy Drive Space Logo" className="w-auto h-4 sm:h-6 md:h-16" />
           </div>
 
           <div className="flex items-center gap-4">
