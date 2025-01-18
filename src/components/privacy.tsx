@@ -4,7 +4,7 @@ const PrivacyPolicy = () => (
 
         <p className="text-gray-300 mb-4">
             This Privacy Policy explains how Galaxy Drive Space collects, uses, and discloses information about you when you use our web application.
-            Galaxy Drive Space itself does not collect any personal information about you or your Google Drive files.
+            Galaxy Drive Space itself does not collect, share, transfer, or disclose any personal information about you, your Google user data or your Google Drive files to anyone.
 
             Standard web servers, including the one used to host this app, automatically collect certain information from visitors.
             This is a common practice for any website and helps us understand how our website is being used and ensure its proper functioning.
@@ -14,7 +14,7 @@ const PrivacyPolicy = () => (
         <p className="text-gray-300 mb-4">
             These server logs may include your IP address, browser type, referring/exit pages, and platform.
 
-            <span className="font-bold text-white m-1">This log data does not include any personal information about you, such as your name, email address, any information related to your Google Drive files, or activity within the Galaxy Drive Space app.</span>
+            <span className="font-bold text-white m-1">This log data does not include any personal information about you, such as your name, email address, any information related to your Google Drive files, or activity within the Galaxy Drive Space app. This data is not shared, transferred, or disclosed to anyone.</span>
 
             We use this information for website administration, troubleshooting, website analytics, and security purposes. We retain log data for 1 year.
         </p>
@@ -33,7 +33,7 @@ const PrivacyPolicy = () => (
         </p>
 
         <p className="text-gray-300 mb-4">
-            <span className="font-bold text-white">No Data Persistence:</span> Data is not stored on our servers or any other location. It is temporary and will be deleted when you close your browser tab or reload the page.
+            <span className="font-bold text-white">No Data Persistence:</span> Data, including Google user data, is not stored on our servers or any other location, nor is it shared, transferred, or disclosed to anyone. It is temporary and will be deleted when you close your browser tab or reload the page.
         </p>
 
         <p className="text-gray-300 mb-4">
